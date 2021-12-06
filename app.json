@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "ARKultur",
+    "slug": "ARKultur",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "ARKultur"
+}
