@@ -1,47 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
-import { Button } from 'react-native-paper';
+import * as React from 'react';
+import { BottomNavigation, Text } from 'react-native-paper';
 
-export default function App() {
+
+// TODO Set 2 view
+const MapRoute = () => <Text>Maps</Text>;
+
+const ScanRoute = () => <Text>Scanner</Text>;
+
+const MyComponent = () => {
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'map', title: 'Map', icon: 'map' },
+    { key: 'scanner', title: 'Scan', icon: 'cube-scan' },
+  ]);
+
+  const renderScene = BottomNavigation.SceneMap({
+    map: MapRoute,
+    scanner: ScanRoute,
+  });
+
   return (
-        <View style={styles.container}>
-        <StatusBar style="auto" />
-        <Image
-            style={styles.logoMain}
-            source={require('./rsrc/lockup-vertical-colored.png')}
-        />
-        <PaperProvider>
-              <Button mode="contained" style={styles.buttonScan} onPress={() => console.log('SCANNER')}>
-                  <Text style={styles.buttonScan}>SCANNER</Text>
-                </Button>
-                <Button mode="contained" style={styles.buttonMaps} onPress={() => console.log('MAPS')}>
-                    <Text style={styles.buttonScan}>MAPS</Text>
-                </Button>
-        </PaperProvider>
-        </View>
+    <BottomNavigation
+      navigationState={{ index, routes }}
+      onIndexChange={setIndex}
+      renderScene={renderScene}
+      barStyle={{ backgroundColor: '#8e38ff' }}
+    />
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-  },
-  logoMain: {
-      marginTop: 60,
-      width: 253,
-      height: 188,
-  },
-  buttonScan: {
-    marginTop: 200,
-    backgroundColor: '#8e38ff',
-    color: '#fff'
-  },
-  buttonMaps: {
-    marginTop: 20,
-    backgroundColor: '#8e38ff',
-    },
-});
+export default MyComponent;
