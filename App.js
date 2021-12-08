@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
+import WorldMap from "./src/WorldMap";
 
 
 // TODO Set 2 view
-const MapRoute = () => <Text>Maps</Text>;
+const MapRoute = () => <WorldMap/>;
 
 const ScanRoute = () => <Text>Scanner</Text>;
 
