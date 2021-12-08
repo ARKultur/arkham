@@ -9,13 +9,17 @@ MapboxGL.setAccessToken("pk.eyJ1IjoiZ3VpbGxhdWVtc2VnZmF1bHQiLCJhIjoiY2s0Yml5ejBl
 function WorldMap() {
     const [display, setDisplay] = useState(false);
     const [card, setCard] = useState(<></>)
+
+
+
     return (
         <View style={styles.page}>
             <View style={styles.container}>
-                <MapboxGL.MapView style={styles.map}>
+                <MapboxGL.MapView style={styles.map}
+                >
                     <MapboxGL.Camera
-                        zoomLevel={16}
-                        centerCoordinate={[4.822766, 45.762275]}
+                        zoomLevel={12}
+                        centerCoordinate={[4.835659, 45.764043]}
                     />
                     <Marker longitude={4.822766}
                             latitude={45.762275}
@@ -45,8 +49,11 @@ const styles = {
         backgroundColor: '#F5FCFF'
     },
     container: {
-        height: 800,
-        width: 400,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
         backgroundColor: 'tomato',
     },
     map: {
