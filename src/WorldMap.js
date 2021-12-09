@@ -8,9 +8,23 @@ MapboxGL.setAccessToken("pk.eyJ1IjoiZ3VpbGxhdWVtc2VnZmF1bHQiLCJhIjoiY2s0Yml5ejBl
 
 function WorldMap() {
     const [display, setDisplay] = useState(false);
-    const [card, setCard] = useState(<></>)
+    const [card, setCard] = useState(<></>);
+    const [getUuid, setUuid] = useState(undefined);
 
-
+    function displayCard(dispCard, id) {
+        if (getUuid === undefined && !display) {
+            setUuid(id);
+            setCard(dispCard);
+            setDisplay(true);
+        } else if (getUuid === id && display) {
+            setDisplay(false);
+            setCard(<></>);
+            setUuid(undefined);
+        } else {
+            setUuid(id);
+            setCard(dispCard);
+        }
+    }
 
     return (
         <View style={styles.page}>
@@ -23,17 +37,15 @@ function WorldMap() {
                     />
                     <Marker longitude={4.822766}
                             latitude={45.762275}
-                            disp={display}
-                            setDisp={setDisplay}
-                            setCa={setCard}
-                            dispCard={<CardInfo/>}
+                            funcDisp={displayCard}
+                            id={"marker-fourviere"}
+                            dispCard={<CardInfo title="Basilique de Fourvière"/>}
                     />
                     <Marker longitude={4.8273}
                             latitude={45.7607}
-                            disp={display}
-                            setDisp={setDisplay}
-                            setCa={setCard}
-                            dispCard={<CardInfo/>}
+                            funcDisp={displayCard}
+                            id={"marker-saintjean"}
+                            dispCard={<CardInfo title="Un autre truc tqt frr"/>}
                     />
                 </MapboxGL.MapView>
                 {card}

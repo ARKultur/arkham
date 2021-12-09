@@ -3,15 +3,13 @@ import {Button} from "react-native-paper";
 import MapboxGL from "@react-native-mapbox-gl/maps";
 
 function Marker(props) {
-
     return (
         <MapboxGL.MarkerView coordinate={[props.longitude, props.latitude]}>
             <Button icon="map-marker"
                     labelStyle={{fontSize: 50, color: '#8e38ff'}}
                     style={{maxWidth: 50, maxHeight: 45}}
                     onPress={() => {
-                        props.setDisp(!props.disp);
-                        props.setCa(props.disp ? props.dispCard : <></>)
+                        props.funcDisp(props.dispCard, props.id);
                     }}
             />
         </MapboxGL.MarkerView>

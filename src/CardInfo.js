@@ -7,13 +7,13 @@ import CardActions from "react-native-paper/src/components/Card/CardActions";
 import {CardCover} from "react-native-paper/src/components/Card/CardCover";
 import AvatarIcon from "react-native-paper/src/components/Avatar/AvatarIcon";
 
-function CardInfo() {
+function CardInfo(props) {
 
     return(
         <View>
             <Card style={styles.card}>
                 <CardCover source={{uri: "https://upload.wikimedia.org/wikipedia/commons/6/60/Notre_Dame_de_Fourvi%C3%A8re.jpg?uselang=fr"}} theme="default"/>
-                <CardTitle title={"Basilic de Fourvière"}
+                <CardTitle title={props.title}
                            theme="default"
                            titleStyle={{color: '#000000'}}
                            left={() => {return (<AvatarIcon size={40} icon="church" style={{backgroundColor: 'rgba(255,255,255,0)'}}/>)}}
@@ -25,7 +25,7 @@ function CardInfo() {
                 <CardActions>
                     <Button mode="contained"
                             onPress={() => console.log('info')}
-                            style={{backgroundColor: 'rgba(121,121,121,0.7)'}}
+                            style={{backgroundColor: 'rgb(121,121,121)'}}
                     >
                         More information
                     </Button>
@@ -43,9 +43,7 @@ function CardInfo() {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: 'rgba(204,204,204,0.68)',
-        maxHeight: 450,
-        maxWidth: 400
+        backgroundColor: 'rgb(204,204,204)',
     },
     text: {
         fontSize: 15,
@@ -53,7 +51,7 @@ const styles = StyleSheet.create({
     },
     button: {
         marginLeft: 10,
-        backgroundColor: 'rgba(121,121,121,0.7)'
+        backgroundColor: 'rgb(121,121,121)'
     }
 });
 
