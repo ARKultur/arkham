@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { BottomNavigation, Text } from 'react-native-paper';
+import { BottomNavigation, Text} from 'react-native-paper';
+import * as data from './style.json';
+import Scanner from './src/Scanner.js';
 
-
-// TODO Set 2 view
+// TODO Set Maps View
 const MapRoute = () => <Text>Maps</Text>;
 
-const ScanRoute = () => <Text>Scanner</Text>;
+const ScanRoute = () => <Scanner/>;
 
 const MyComponent = () => {
   const [index, setIndex] = React.useState(0);
@@ -24,7 +25,7 @@ const MyComponent = () => {
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}
-      barStyle={{ backgroundColor: '#8e38ff' }}
+      barStyle={{ backgroundColor: data.mainColor }}
     />
   );
 };
