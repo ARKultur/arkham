@@ -11,7 +11,7 @@ export default function App() {
         {/* TODO Importer background SVG blop */}
         <Image
             style={styles.logoMain}
-            source={require('./rsrc/lockup-vertical-colored.png')}
+            source={require('./rsc/lockup-vertical-colored.png')}
         />
         {/* TODO Importer font GOOGLE pour all text */}
         <Text style={styles.description} >Revisitez votre voyage avec la puissance de la réalité augmentée</Text>
