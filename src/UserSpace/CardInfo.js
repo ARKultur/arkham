@@ -6,8 +6,10 @@ import CardContent from "react-native-paper/src/components/Card/CardContent";
 import CardActions from "react-native-paper/src/components/Card/CardActions";
 import {CardCover} from "react-native-paper/src/components/Card/CardCover";
 import AvatarIcon from "react-native-paper/src/components/Avatar/AvatarIcon";
+import { useNavigation } from '@react-navigation/native';
 
 function CardInfo(props) {
+    const navigation = useNavigation();
 
     return(
         <View>
@@ -24,7 +26,10 @@ function CardInfo(props) {
                     </ScrollView></CardContent>
                 <CardActions>
                     <Button mode="contained"
-                            onPress={() => console.log('info')}
+                            onPress={() => {
+                                console.log('info');
+                                navigation.navigate('InfoScreen');
+                            }}
                             style={{backgroundColor: 'rgb(121,121,121)'}}
                     >
                         More information

@@ -1,34 +1,24 @@
 import * as React from 'react';
-import { BottomNavigation, Text } from 'react-native-paper';
-import WorldMap from "./src/WorldMap";
-import { BottomNavigation, Text} from 'react-native-paper';
-import * as data from './style.json';
-import Scanner from './src/Scanner.js';
+import {NavigationContainer} from "@react-navigation/native";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import UserScreen from "./src/UserSpace/UserScreen";
+import InformationScreen from "./src/UserSpace/InformationScreen";
 
-const MapRoute = () => <WorldMap/>;
-
-const ScanRoute = () => <Scanner/>;
+const Stack = createNativeStackNavigator();
 
 const MyComponent = () => {
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    { key: 'map', title: 'Map', icon: 'map' },
-    { key: 'scanner', title: 'Scan', icon: 'cube-scan' },
-  ]);
 
-  const renderScene = BottomNavigation.SceneMap({
-    map: MapRoute,
-    scanner: ScanRoute,
-  });
-
-  return (
-    <BottomNavigation
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={renderScene}
-      barStyle={{ backgroundColor: data.mainColor }}
-    />
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen name="UserScreen"
+                              component={UserScreen}
+                              options={{ headerShown: false }}
+                />
+                <Stack.Screen name="InfoScreen" component={InformationScreen}/>
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 };
 
 export default MyComponent;

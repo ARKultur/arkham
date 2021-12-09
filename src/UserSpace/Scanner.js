@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, Image, } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { IconButton} from 'react-native-paper';
 import { RNCamera } from 'react-native-camera'
 
