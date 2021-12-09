@@ -1,17 +1,22 @@
 import React from "react";
-import {View} from "react-native";
+import {Text, View} from "react-native";
 import {Button} from "react-native-paper";
 import {useNavigation} from '@react-navigation/native';
 import {Image} from "react-native";
+import {StatusBar} from "expo-status-bar";
 
 function LoginScreen() {
     const navigation = useNavigation();
 
     return (
         <View style={styles.page}>
+            {/* TODO Importer background SVG blop */}
             <Image source={require('../../rsc/lockup-vertical-colored.png')}
                    style={styles.logo}
             />
+            {/* TODO Importer font GOOGLE pour all text */}
+            <Text style={styles.description} >Revisitez votre voyage avec la puissance de la réalité augmentée</Text>
+
             <Button mode="contained"
                     onPress={() => {
                         navigation.navigate('UserScreen');
@@ -33,8 +38,12 @@ const styles = {
     logo:{
         width: 270,
         height: 200,
-        top: -100
-    }
+        top: -80
+    },
+    description: {
+        margin: 25,
+        fontSize: 14,
+    },
 }
 
 export default LoginScreen;
