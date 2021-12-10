@@ -2,12 +2,10 @@ import React, {useContext} from "react";
 import {View} from "react-native";
 import {Button, Avatar} from "react-native-paper";
 import {useNavigation} from "@react-navigation/native";
-import {UserContext} from "../UserSpace/UserScreen";
 
 
 function ProfileScreen() {
     const navigation = useNavigation();
-    const ctx = useContext(UserContext);
 
     return(
         <View style={styles.page}>

@@ -1,4 +1,4 @@
-import React, {createContext, useState} from "react";
+import React from "react";
 import { BottomNavigation } from 'react-native-paper';
 import * as data from "../../style.json";
 import WorldMap from "./WorldMap";
@@ -8,7 +8,6 @@ import ProfileScreen from "../ProfileSpace/ProfileScreen";
 const MapRoute = () => <WorldMap/>;
 const ScanRoute = () => <Scanner/>;
 const ProfileRoute = () => <ProfileScreen/>;
-export const UserContext = createContext();
 
 function UserScreen() {
     const [index, setIndex] = React.useState(0);
