@@ -3,7 +3,6 @@ import {Text, View} from "react-native";
 import {Button} from "react-native-paper";
 import {useNavigation} from '@react-navigation/native';
 import {Image} from "react-native";
-import {StatusBar} from "expo-status-bar";
 
 function LoginScreen() {
     const navigation = useNavigation();

@@ -4,7 +4,6 @@ import MapboxGL from "@react-native-mapbox-gl/maps";
 import Marker from "./Marker";
 import CardInfo from "./CardInfo";
 import Geolocation from 'react-native-geolocation-service';
-import {useNavigation} from "@react-navigation/native";
 
 MapboxGL.setAccessToken("pk.eyJ1IjoiZ3VpbGxhdWVtc2VnZmF1bHQiLCJhIjoiY2s0Yml5ejBlMGU0ZzNucG0wcGRlMHR2YSJ9.J_AUTDC5k_epxoGl4IpMEw");
 
@@ -13,7 +12,7 @@ function WorldMap() {
     const [card, setCard] = useState(<></>);
     const [getUuid, setUuid] = useState(undefined);
     const [pos, setPos] = useState([0, 0]);
-    const [animTime, setAnimTime] = useState(4500);
+    const [animTime, setAnimTime] = useState(3500);
     const [zoom, setZoom] = useState(13);
 
     function displayCard(dispCard, id, target) {
@@ -56,12 +55,13 @@ function WorldMap() {
             <View style={styles.container}>
                 <MapboxGL.MapView style={styles.map}
                 >
-                    <MapboxGL.UserLocation/>
+                    <MapboxGL.UserLocation
+                        showsUserHeadingIndicator={true}
+                    />
                     <MapboxGL.Camera
                         zoomLevel={zoom}
                         centerCoordinate={pos}
                         animationDuration={animTime}
-                        animationMode="flyTo"
                     />
                     <Marker longitude={4.822766}
                             latitude={45.762275}

@@ -1,7 +1,6 @@
 import React from "react";
 import {Button} from "react-native-paper";
 import MapboxGL from "@react-native-mapbox-gl/maps";
-import {useNavigation} from "@react-navigation/native";
 
 function Marker(props) {
     return (

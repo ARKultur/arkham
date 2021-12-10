@@ -23,7 +23,8 @@ function CardInfo(props) {
                 <CardContent>
                     <ScrollView style={{maxHeight: 100}}>
                         <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean vitae ullamcorper purus, vel vehicula orci. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla nec porta nisl, et finibus felis. Mauris pellentesque nulla lacus, sit amet pretium ante cursus lobortis. Donec volutpat dapibus ipsum, in porta orci placerat porta. Nulla facilisi. Nunc semper bibendum ullamcorper. Donec hendrerit arcu lorem, a sollicitudin dolor facilisis a. Etiam mollis diam non diam ultricies tempor. Donec tristique non ligula</Text>
-                    </ScrollView></CardContent>
+                    </ScrollView>
+                </CardContent>
                 <CardActions>
                     <Button mode="contained"
                             onPress={() => {
