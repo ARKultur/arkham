@@ -5,6 +5,7 @@ import UserScreen from "./src/UserSpace/UserScreen";
 import InformationScreen from "./src/UserSpace/InformationSpace/InformationScreen";
 import LoginScreen from "./src/LoginSpace/LoginScreen";
 import ProfileScreen from "./src/ProfileSpace/ProfileScreen";
+import ArScene from "./src/ARScene/ArScene";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,6 +14,7 @@ const MyComponent = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
+                <Stack.Screen name="ARScene" component={ArScene}/>
                 <Stack.Screen name="LoginScreen"
                               component={LoginScreen}
                               options={{ headerShown: false }}
