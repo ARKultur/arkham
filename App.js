@@ -14,7 +14,6 @@ const MyComponent = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="ARScene" component={ArScene}/>
                 <Stack.Screen name="LoginScreen"
                               component={LoginScreen}
                               options={{ headerShown: false }}
@@ -25,6 +24,7 @@ const MyComponent = () => {
                 />
                 <Stack.Screen name="InfoScreen" component={InformationScreen}/>
                 <Stack.Screen name="ProfileScreen" component={ProfileScreen}/>
+                <Stack.Screen name="ARScene" component={ArScene}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
