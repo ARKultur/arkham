@@ -1,5 +1,3 @@
-import { defaults } from 'jest-config';
-
 /** @type {import('jest').Config} */
 const config = {
   preset: 'react-native',
@@ -8,7 +6,6 @@ const config = {
   transformIgnorePatterns: [
     '/node_modules/(?!(@react-native|react-native)/).*/',
   ],
-  moduleFileExtensions: [...defaults.moduleFileExtensions, 'mts', 'cts'],
 };
 
 export default config;
