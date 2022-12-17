@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "np": "np --no-publish",
+    "postversion": "react-native-version",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
@@ -34,9 +36,15 @@
     "eslint-plugin-react": "^7.31.10",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "0.72.3",
+    "np": "^7.6.2",
+    "react-native-version": "^4.0.0",
     "react-test-renderer": "18.1.0"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ARKultur/arkham.git"
   }
 }
