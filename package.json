@@ -9,7 +9,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "test": "jest --config ./jest.config.js",
+    "test": "jest --config ./jest.config.cjs",
     "lint": "eslint ."
   },
   "dependencies": {
