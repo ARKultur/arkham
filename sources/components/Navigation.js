@@ -4,7 +4,6 @@ import Home from '../screens/Home';
 import Profile from '../screens/Profile';
 import Settings from '../screens/Settings';
 
-
 const Navigation = () => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
