@@ -2,14 +2,13 @@
   "name": "arkham",
   "version": "0.0.1",
   "private": true,
-  "type": "module",
   "scripts": {
     "np": "np --no-publish",
     "postversion": "react-native-version",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "test": "jest --config ./jest.config.cjs",
+    "test": "jest",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -38,7 +37,7 @@
     "ts-jest": "^29.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
+    "@babel/core": "^7.20.12",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
     "@testing-library/react-native": "^11.5.0",
@@ -50,9 +49,6 @@
     "np": "^7.6.2",
     "react-native-version": "^4.0.0",
     "react-test-renderer": "18.1.0"
-  },
-  "jest": {
-    "preset": "react-native"
   },
   "repository": {
     "type": "git",
