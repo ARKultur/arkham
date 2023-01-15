@@ -59,8 +59,8 @@ const App = () => {
             <Stack.Screen name="Landing Screen" component={LandingScreen} options={{headerShown: false}} />
             <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
             <Stack.Screen name="Register" component={Register} />
-            <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Settings" component={Settings} />
             <Stack.Screen name="Forgot Password" component={ForgotPassword} />
             <Stack.Screen name="OTP" component={FormOTP} />
