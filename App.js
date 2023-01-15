@@ -52,7 +52,7 @@ const App = () => {
       <PaperProvider theme={theme}>
         <NavigationContainer theme={theme}>
           <Stack.Navigator screenOptions={{header: Appbar, animation: 'none'}}
-            initialRouteName={showPermissionsPage ? 'PermissionsPage' : 'ARScreen'}
+            initialRouteName={showPermissionsPage ? 'PermissionsPage' : 'Login'}
           >
             <Stack.Screen name="PermissionsPage" component={PermissionsPage} />
             <Stack.Screen name="ARScreen" component={ARScreen} />

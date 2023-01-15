@@ -4,11 +4,11 @@ import { StyleSheet, View, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 
 const styles = StyleSheet.create({
-    takePhotoButton: {
-        paddingLeft: 130,
-        bottom: 0,
-        position: 'absolute',
-    }
+  takePhotoButton: {
+    paddingLeft: 130,
+    bottom: 0,
+    position: 'absolute',
+  }
 });
 
 const ARScreen = () => {
@@ -25,7 +25,7 @@ const ARScreen = () => {
         throw new Error('Camera Ref is Null');
       console.log('Photo taking ....');
       const photo = await camera.current.takePhoto(takePhotoOptions);
-      console.log(photo.path)
+      console.log(photo.path);
     } catch (error) {
       console.log(error);
     }
@@ -35,18 +35,18 @@ const ARScreen = () => {
     return <View />;
   return (
     <>
-        <Camera style={StyleSheet.absoluteFill}
-          device={device}
-          isActive={true}
-          ref={camera}
-          photo={true}
-        />
-        <Button style={styles.takePhotoButton}
-          onPress={takePhoto}
-          icon={() =>
-              <Image source={require('../images/white-circle.png')} />
-          }
-        />
+      <Camera style={StyleSheet.absoluteFill}
+        device={device}
+        isActive={true}
+        ref={camera}
+        photo={true}
+      />
+      <Button style={styles.takePhotoButton}
+        onPress={takePhoto}
+        icon={() =>
+          <Image source={require('../images/white-circle.png')} />
+        }
+      />
     </>
   );
 };
