@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  react-app:
+    build:
+      context: ./
+    ports:
+      - "3000:3000"
+    container_name: react-ui
