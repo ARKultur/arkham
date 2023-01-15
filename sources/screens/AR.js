@@ -1,11 +1,10 @@
 import React, { useRef } from 'react';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
-import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { StyleSheet, View, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 
 const styles = StyleSheet.create({
-    buttonContainer: {
+    takePhotoButton: {
         paddingLeft: 130,
         bottom: 0,
         position: 'absolute',
@@ -42,7 +41,7 @@ const ARScreen = () => {
           ref={camera}
           photo={true}
         />
-        <Button style={styles.buttonContainer}
+        <Button style={styles.takePhotoButton}
           onPress={takePhoto}
           icon={() =>
               <Image source={require('../images/white-circle.png')} />
