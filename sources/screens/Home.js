@@ -1,10 +1,41 @@
 import React, { Component } from 'react';
 import {View,StyleSheet,StatusBar,Image,Dimensions} from 'react-native';
-import MapView ,{ MAP_TYPES, PROVIDER_DEFAULT, UrlTile } from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
+import { PROVIDER_GOOGLE } from 'react-native-maps';
 
 
 const Home = () => {
-const { width, height } = Dimensions.get('window');
+  return (
+    
+
+    <View style={styles.MainContainer}>  
+  
+    <MapView  
+      style={styles.mapStyle}  
+      showsUserLocation={true}  
+      zoomEnabled={true}  
+      zoomControlEnabled={true}  
+      initialRegion={{  
+        latitude: 46.8137431,   
+        longitude: -71.2084061,  
+        latitudeDelta: 0.0922,  
+        longitudeDelta: 0.0421,  
+      }}>  
+
+      <Marker  
+        coordinate={{ latitude: 46.8074905, longitude: -71.20765317965302}}  
+        title={"citadelle de quebec"}  
+        description={"First museum"}  
+      />
+    </MapView>  
+      
+  </View>  
+  )
+};
+
+
+
+/*const { width, height } = Dimensions.get('window');
 
   const ASPECT_RATIO = width / height;
   const LATITUDE = 22.720555;
@@ -33,27 +64,7 @@ const { width, height } = Dimensions.get('window');
         />
       </MapView>
      </View>
-  );
-};
-
-/*<MapView
-style={styles.mapStyle}
-showsUserLocation={false}
-zoomEnabled={true}
-zoomControlEnabled={true}
-initialRegion={{
-  latitude: 28.57966,
-  longitude: 75.32111,
-  latitudeDelta: 0.1,
-  longitudeDelta: 0.0421,
-}}>
-<Marker
-  coordinate={{latitude: 28.57966, longitude: 77.32111}}
-  title={'museum #1'}
-  description={'this is a museum'}
-/>
-</MapView>
-</View>*/
+  )*/
 
 const styles = StyleSheet.create({
   MainContainer: {
