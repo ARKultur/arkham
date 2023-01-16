@@ -16,7 +16,7 @@ const PermissionsPage = ({navigation}) => {
 
   useEffect(() => {
     if (cameraPermissionStatus === 'authorized')
-      navigation.replace('ARScreen');
+      navigation.replace('Login');
   }, [cameraPermissionStatus, navigation]);
 
   return (
