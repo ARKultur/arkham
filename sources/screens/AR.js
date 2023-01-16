@@ -5,7 +5,7 @@ import { Button } from 'react-native-paper';
 
 const styles = StyleSheet.create({
   takePhotoButton: {
-    paddingLeft: 130,
+    paddingLeft: 152,
     bottom: 0,
     position: 'absolute',
   }

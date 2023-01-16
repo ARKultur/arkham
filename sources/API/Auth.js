@@ -1,37 +1,45 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:4000/api/';
+import { API_URL } from '../constants/API';
+import UserServices from './User';
 
 const register = async (body, thunkAPI) => {
   try {
-    const response = await axios.post(API_URL + 'account', {
-      account : {body}
+    const response = await axios.post(API_URL + '/register', {
+      auth: {
+        email: body.email.toLowerCase(),
+        username: body.username,
+        first_name: body.first_name,
+        last_name: body.last_name,
+        password: body.password,
+      },
     });
-    console.log(response?.data);
-    return response?.data;
+
+    return response.data;
   } catch (error) {
-    alert(error.message);
-    console.log(error);
-    return thunkAPI.rejectWithValue(error.message);
+    console.log(error.response.data);
+    thunkAPI.rejectWithValue(error.response.data);
+    throw error.response.data;
   }
 };
 
 const login = async (email, password, thunkAPI) => {
   try {
-    const response = await axios.post(API_URL + 'login', {
-      email,
+    const response = await axios.post(API_URL + '/login', {
+      email: email.toLowerCase(),
       password,
     });
-    console.log(response?.data);
-    return response?.data;
+    const userData = await UserServices.getTmpUser(response.data.id);
+
+    userData.token = response.data.token;
+    return userData;
   } catch (error) {
-    alert(error.message);
-    return thunkAPI.rejectWithValue(error.message);
+    console.log(error.response.data);
+    thunkAPI.rejectWithValue(error.response.data);
+    throw error.response.data;
   }
 };
 
 const logout = async () => {
-  // TODO: Implement logout
   return null;
 };
 

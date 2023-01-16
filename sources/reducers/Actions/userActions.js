@@ -2,18 +2,23 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import AuthService from '../../API/Auth';
 
 export const register = createAsyncThunk(
-  'user/register',
-  async ({ name, email, password, confirmPassword }, thunkAPI) => {
+  'auth/register',
+  async ({username, firstName, lastName, email, password}, thunkAPI) => {
     try {
       const body = {
-        email,
-        name,
-        password,
-        confirmPassword
+        email: email,
+        username: username,
+        first_name: firstName,
+        last_name: lastName,
+        password: password,
       };
-      await AuthService.register(body, thunkAPI);
+      const result = await AuthService.register(body, thunkAPI);
+
+      return result;
     } catch (error) {
+      alert('Invalid credentials.');
       console.error(error);
+      throw error;
     }
   }
 );
@@ -23,9 +28,12 @@ export const login = createAsyncThunk(
   async ({ email, password }, thunkAPI) => {
     try {
       const data = await AuthService.login(email, password, thunkAPI);
+
       return data;
     } catch (error) {
+      alert('Invalid credentials.');
       console.error(error);
+      throw error;
     }
   }
 );

@@ -7,12 +7,12 @@ import { register } from '../reducers/Actions/userActions';
 import { useDispatch } from 'react-redux';
 
 const ContainerButton = (props) => {
-  const {navigation, name, email, password, confirmPassword} = props;
+  const {navigation, username, firstName, lastName, email, password, confirmPassword} = props;
   const dispatch = useDispatch();
 
   return (
     <View style={styles.containerButton}>
-      <Button mode="contained" onPress={() => dispatch(register(name, email, password, confirmPassword))} contentStyle={styles.button}>
+      <Button mode="contained" onPress={() => dispatch(register({username, firstName, lastName, email, password, confirmPassword}))} contentStyle={styles.button}>
         <Text style={styles.buttonFont}>Register</Text>
       </Button>
 
@@ -27,6 +27,7 @@ const ContainerButton = (props) => {
 };
 
 const Register = ({navigation}) => {
+  const [username, setUsername] = React.useState('');
   const [firstName, setFirstName] = React.useState('');
   const [lastName, setLastName] = React.useState('');
   const [email, setEmail] = React.useState('');
@@ -37,6 +38,13 @@ const Register = ({navigation}) => {
     <ScrollView>
       <View style={styles.container}>
         <Text variant="headlineSmall" style={styles.headlines}>Personnal info</Text>
+        <TextInput
+          label="Username"
+          value={username}
+          mode="outlined"
+          onChangeText={text => setUsername(text)}
+          style={styles.textInput}
+        />
         <TextInput
           label="First Name"
           value={firstName}
@@ -76,7 +84,7 @@ const Register = ({navigation}) => {
           style={styles.textInput}
         />
 
-        <ContainerButton navigation={navigation} name={firstName} email={email} password={password} confirmPassword={confirmPassword}/>
+        <ContainerButton navigation={navigation} username={username} firstName={firstName} lastName={lastName} email={email} password={password} confirmPassword={confirmPassword}/>
 
       </View>
     </ScrollView>
@@ -124,7 +132,9 @@ ContainerButton.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
-  name : PropTypes.string.isRequired,
+  username : PropTypes.string.isRequired,
+  firstName : PropTypes.string.isRequired,
+  lastName : PropTypes.string.isRequired,
   email : PropTypes.string.isRequired,
   password : PropTypes.string.isRequired,
   confirmPassword : PropTypes.string.isRequired,
