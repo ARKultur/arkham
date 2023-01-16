@@ -1,41 +1,59 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import MapView from 'react-native-maps';
-import {Marker} from 'react-native-maps';
+import React, { Component } from 'react';
+import {View,StyleSheet,StatusBar,Image,Dimensions} from 'react-native';
+import MapView ,{ MAP_TYPES, PROVIDER_DEFAULT, UrlTile } from 'react-native-maps';
+
 
 const Home = () => {
+const { width, height } = Dimensions.get('window');
+
+  const ASPECT_RATIO = width / height;
+  const LATITUDE = 22.720555;
+  const LONGITUDE = 75.858633;
+  const LATITUDE_DELTA = 0.0922;
+  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+  const region = {
+    latitude: LATITUDE,
+    longitude: LONGITUDE,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
+  }
+
   return (
     <View style={styles.MainContainer}>
-      <MapView
-        style={styles.mapStyle}
-        showsUserLocation={false}
-        zoomEnabled={true}
-        zoomControlEnabled={true}
-        initialRegion={{
-          latitude: 28.57966,
-          longitude: 77.32111,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}>
-        <Marker
-          coordinate={{latitude: 28.57966, longitude: 77.32111}}
-          title={'museum #1'}
-          description={'this is a museum'}
-        />
-        <Marker
-          coordinate={{latitude: 28.57966, longitude: 79.32111}}
-          title={'museum #2'}
-          description={'this is a museum'}
-        />
-        <Marker
-          coordinate={{latitude: 26.57966, longitude: 77.32111}}
-          title={'museum #3'}
-          description={'this is a museum'}
+     <MapView
+       region={region}
+       provider={undefined}
+       mapType={Platform.OS == "ios" ? "none" : "standard"}
+       rotateEnabled={false}
+       style={styles.map}
+       showsUserLocation>
+        <UrlTile
+          urlTemplate="http://a.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
+          maximumZ={19} 
         />
       </MapView>
-    </View>
+     </View>
   );
 };
+
+/*<MapView
+style={styles.mapStyle}
+showsUserLocation={false}
+zoomEnabled={true}
+zoomControlEnabled={true}
+initialRegion={{
+  latitude: 28.57966,
+  longitude: 75.32111,
+  latitudeDelta: 0.1,
+  longitudeDelta: 0.0421,
+}}>
+<Marker
+  coordinate={{latitude: 28.57966, longitude: 77.32111}}
+  title={'museum #1'}
+  description={'this is a museum'}
+/>
+</MapView>
+</View>*/
 
 const styles = StyleSheet.create({
   MainContainer: {
@@ -54,6 +72,11 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+  map: {
+    flex: 1,
+    width: 400,
+    height: 800,
+   },
 });
 
 export default Home;
