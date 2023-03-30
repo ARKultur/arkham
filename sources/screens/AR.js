@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View, Image, NativeModules } from 'react-native';
 import { Button } from 'react-native-paper';
 
 const styles = StyleSheet.create({
@@ -31,24 +31,30 @@ const ARScreen = () => {
     }
   };
 
-  if (!device)
-    return <View />;
+  console.log(NativeModules.Geospacial)
+  NativeModules.Geospacial.createCalendarEvent('testName', 'testLocation');
+
+  return <View />;
+  //return (
+  //  <>
+  //    <Camera style={StyleSheet.absoluteFill}
+  //      device={device}
+  //      isActive={true}
+  //      ref={camera}
+  //      photo={true}
+  //    />
+  //    <Button style={styles.takePhotoButton}
+  //      onPress={takePhoto}
+  //      icon={() =>
+  //        <Image source={require('../images/white-circle.png')} />
+  //      }
+  //    />
+  //  </>
+  //);
   return (
-    <>
-      <Camera style={StyleSheet.absoluteFill}
-        device={device}
-        isActive={true}
-        ref={camera}
-        photo={true}
-      />
-      <Button style={styles.takePhotoButton}
-        onPress={takePhoto}
-        icon={() =>
-          <Image source={require('../images/white-circle.png')} />
-        }
-      />
-    </>
-  );
+    <View>
+    </View>
+  )
 };
 
 export default ARScreen;

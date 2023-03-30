@@ -1,4 +1,4 @@
-package com.arkham.newarchitecture.components;
+package com.arkultur.arkham.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

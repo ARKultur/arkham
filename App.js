@@ -34,7 +34,7 @@ const theme = {
 
 const ProfileStack = () => {
   return (
-    <Stack.Navigator screenOptions={{header: Appbar, animation: 'none'}}>
+    <Stack.Navigator screenOptions={{ header: Appbar, animation: 'none' }}>
       <Stack.Screen name="ProfileScreen" component={Profile} />
       <Stack.Screen name="Settings" component={Settings} />
     </Stack.Navigator>
@@ -72,7 +72,7 @@ const BottomNavigation = () => {
 };
 
 const Navigation = () => {
-  const {isLoggedIn} = useSelector(state => state.userReducer);
+  const { isLoggedIn } = useSelector(state => state.userReducer);
   const [cameraPermission, setCameraPermission] = useState();
   const [microphonePermission, setMicrophonePermission] = useState();
 
@@ -87,26 +87,26 @@ const Navigation = () => {
     return null;
   }
   const showPermissionsPage = cameraPermission !== 'authorized' ||
-        microphonePermission === 'not-determined';
+    microphonePermission === 'not-determined';
 
   return (
     <NavigationContainer theme={theme}>
-      <Stack.Navigator screenOptions={{header: Appbar, animation: 'none'}}>
-        {showPermissionsPage && <Stack.Screen name="PermissionsPage" component={PermissionsPage} options={{headerShown: false}} />}
-        {isLoggedIn &&
-        <Stack.Group>
-          <Stack.Screen name="Tab" component={BottomNavigation} options={{headerShown: false}} />
-          <Stack.Screen name="Settings" component={Settings} options={{headerShown: false}} />
-        </Stack.Group>
-            ||
-            <Stack.Group>
-              <Stack.Screen name="Landing Screen" component={LandingScreen} options={{headerShown: false}} />
-              <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
-              <Stack.Screen name="Register" component={Register} />
-              <Stack.Screen name="Forgot Password" component={ForgotPassword} />
-              <Stack.Screen name="OTP" component={FormOTP} />
-              <Stack.Screen name="Reset Password" component={ResetPassword} options={{headerShown: false}}/>
-            </Stack.Group>
+      <Stack.Navigator screenOptions={{ header: Appbar, animation: 'none' }}>
+        {showPermissionsPage && <Stack.Screen name="PermissionsPage" component={PermissionsPage} options={{ headerShown: false }} />}
+        {!isLoggedIn &&
+          <Stack.Group>
+            <Stack.Screen name="Tab" component={BottomNavigation} options={{ headerShown: false }} />
+            <Stack.Screen name="Settings" component={Settings} options={{ headerShown: false }} />
+          </Stack.Group>
+          ||
+          <Stack.Group>
+            <Stack.Screen name="Landing Screen" component={LandingScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="Forgot Password" component={ForgotPassword} />
+            <Stack.Screen name="OTP" component={FormOTP} />
+            <Stack.Screen name="Reset Password" component={ResetPassword} options={{ headerShown: false }} />
+          </Stack.Group>
         }
       </Stack.Navigator>
 
@@ -116,7 +116,6 @@ const Navigation = () => {
 };
 
 const App = () => {
-
   return (
     <StoreProvider store={Store}>
       <PaperProvider theme={theme}>

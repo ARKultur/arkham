@@ -1,4 +1,4 @@
-package com.arkham.newarchitecture;
+package com.arkultur.arkham.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.arkham.BuildConfig;
-import com.arkham.newarchitecture.components.MainComponentsRegistry;
-import com.arkham.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.arkultur.arkham.BuildConfig;
+import com.arkultur.arkham.newarchitecture.components.MainComponentsRegistry;
+import com.arkultur.arkham.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
