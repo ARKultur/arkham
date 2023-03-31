@@ -259,6 +259,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.aar"])
 
+    implementation project(path: ':geospacial')
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

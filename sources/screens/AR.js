@@ -12,10 +12,9 @@ const styles = StyleSheet.create({
 });
 
 const ARScreen = () => {
-  const devices = useCameraDevices();
-  const device = devices.back;
-  const camera = useRef(null);
   const takePhoto = async () => {
+    console.log(NativeModules.Geospacial);
+    NativeModules.Geospacial.runPoc();
     try {
       const takePhotoOptions = {
         flash: 'on'
@@ -24,37 +23,23 @@ const ARScreen = () => {
       if (camera.current == null)
         throw new Error('Camera Ref is Null');
       console.log('Photo taking ....');
-      const photo = await camera.current.takePhoto(takePhotoOptions);
       console.log(photo.path);
     } catch (error) {
       console.log(error);
+
     }
   };
 
-  console.log(NativeModules.Geospacial)
-  NativeModules.Geospacial.createCalendarEvent('testName', 'testLocation');
-
-  return <View />;
-  //return (
-  //  <>
-  //    <Camera style={StyleSheet.absoluteFill}
-  //      device={device}
-  //      isActive={true}
-  //      ref={camera}
-  //      photo={true}
-  //    />
-  //    <Button style={styles.takePhotoButton}
-  //      onPress={takePhoto}
-  //      icon={() =>
-  //        <Image source={require('../images/white-circle.png')} />
-  //      }
-  //    />
-  //  </>
-  //);
   return (
-    <View>
-    </View>
-  )
+    <>
+      <Button style={styles.takePhotoButton}
+        onPress={takePhoto}
+        icon={() =>
+          <Image source={require('../images/white-circle.png')} />
+        }
+      />
+    </>
+  );
 };
 
 export default ARScreen;
