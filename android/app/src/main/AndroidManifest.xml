@@ -40,11 +40,11 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
-      <meta-data 
-          tools:replace="android:value"
-          android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDRWqn_JN9GcTJu5apWre8t7Qrn1fc_v3w" />
       <meta-data
           tools:replace="android:value"
-          android:name="com.google.android.ar.API_KEY" android:value="AIzaSyDRWqn_JN9GcTJu5apWre8t7Qrn1fc_v3w"/>
+          android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDF_Q7beBZUsxtXPYswrpP6XckmHoOpBjY" />
+      <meta-data
+          tools:replace="android:value"
+          android:name="com.google.android.ar.API_KEY" android:value="AIzaSyDF_Q7beBZUsxtXPYswrpP6XckmHoOpBjY"/>
     </application>
 </manifest>
