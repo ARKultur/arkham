@@ -1,4 +1,4 @@
-package com.arkham;
+package com.arkultur.arkham;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

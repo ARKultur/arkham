@@ -10,22 +10,21 @@ namespace react {
 
 class MainComponentsRegistry
     : public facebook::jni::HybridClass<MainComponentsRegistry> {
- public:
+public:
   // Adapt it to the package you used for your Java class.
   constexpr static auto kJavaDescriptor =
-      "Lcom/arkham/newarchitecture/components/MainComponentsRegistry;";
+      "Lcom/arkultur/arkham/newarchitecture/components/MainComponentsRegistry;";
 
   static void registerNatives();
 
   MainComponentsRegistry(ComponentFactory *delegate);
 
- private:
+private:
   static std::shared_ptr<ComponentDescriptorProviderRegistry const>
   sharedProviderRegistry();
 
-  static jni::local_ref<jhybriddata> initHybrid(
-      jni::alias_ref<jclass>,
-      ComponentFactory *delegate);
+  static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jclass>,
+                                                ComponentFactory *delegate);
 };
 
 } // namespace react

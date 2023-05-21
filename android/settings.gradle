@@ -6,9 +6,10 @@ pluginManagement {
     }
 } 
 
-rootProject.name = 'Arkham'
+rootProject.name = 'arkham'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
+
 includeBuild('../node_modules/react-native-gradle-plugin')
 
 if (settings.hasProperty("newArchEnabled") && settings.newArchEnabled == "true") {
@@ -17,3 +18,4 @@ if (settings.hasProperty("newArchEnabled") && settings.newArchEnabled == "true")
     include(":ReactAndroid:hermes-engine")
     project(":ReactAndroid:hermes-engine").projectDir = file('../node_modules/react-native/ReactAndroid/hermes-engine')
 }
+include ':geospacial'

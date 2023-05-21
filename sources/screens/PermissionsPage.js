@@ -3,7 +3,7 @@ import { Linking } from 'react-native';
 import { StyleSheet, View, Text } from 'react-native';
 import { Camera } from 'react-native-vision-camera';
 
-const PermissionsPage = ({navigation}) => {
+const PermissionsPage = ({ navigation }) => {
   const [cameraPermissionStatus, setCameraPermissionStatus] = useState('not-determined');
 
   const requestCameraPermission = useCallback(async () => {

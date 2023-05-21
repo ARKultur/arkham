@@ -35,7 +35,7 @@ const theme = {
 
 const ProfileStack = () => {
   return (
-    <Stack.Navigator screenOptions={{header: Appbar, animation: 'none'}}>
+    <Stack.Navigator screenOptions={{ header: Appbar, animation: 'none' }}>
       <Stack.Screen name="ProfileScreen" component={Profile} />
       <Stack.Screen name="Settings" component={Settings} />
     </Stack.Navigator>
@@ -50,12 +50,6 @@ const BottomNavigation = () => {
       barStyle={{ backgroundColor: 'white', padding: 0 }}
       labeled={false}
     >
-      <Tab.Screen name="Home" component={Home} options={{
-        headerShown: false,
-        tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="home" color={color} size={25} />
-        ),
-      }} />
       <Tab.Screen name="AR" component={ARScreen} options={{
         headerShown: false,
         tabBarIcon: ({ color }) => (
@@ -73,7 +67,7 @@ const BottomNavigation = () => {
 };
 
 const Navigation = () => {
-  const {isLoggedIn} = useSelector(state => state.userReducer);
+  const { isLoggedIn } = useSelector(state => state.userReducer);
   const [cameraPermission, setCameraPermission] = useState();
   const [microphonePermission, setMicrophonePermission] = useState();
 
@@ -88,7 +82,7 @@ const Navigation = () => {
     return null;
   }
   const showPermissionsPage = cameraPermission !== 'authorized' ||
-        microphonePermission === 'not-determined';
+    microphonePermission === 'not-determined';
 
   return (
     <NavigationContainer theme={theme}>
@@ -118,7 +112,6 @@ const Navigation = () => {
 };
 
 const App = () => {
-
   return (
     <StoreProvider store={Store}>
       <PaperProvider theme={theme}>
