@@ -13,6 +13,8 @@ const userSlice = createSlice({
   extraReducers: {
     [register.fulfilled]: (state) => {
       state.isLoggedIn = false;
+
+      alert('Your account has been created\nYou can login now.');
     },
     [register.rejected]: (state) => {
       state.isLoggedIn = false;

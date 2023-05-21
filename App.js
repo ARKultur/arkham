@@ -19,6 +19,7 @@ import { Camera } from 'react-native-vision-camera';
 import ARScreen from './sources/screens/AR';
 import PermissionsPage from './sources/screens/PermissionsPage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Suggestions from './sources/screens/Suggestions';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -95,6 +96,7 @@ const Navigation = () => {
         {showPermissionsPage && <Stack.Screen name="PermissionsPage" component={PermissionsPage} options={{headerShown: false}} />}
         {isLoggedIn &&
         <Stack.Group>
+          <Stack.Screen name="Suggestions" component={Suggestions} options={{headerShown: false}} />
           <Stack.Screen name="Tab" component={BottomNavigation} options={{headerShown: false}} />
           <Stack.Screen name="Settings" component={Settings} options={{headerShown: false}} />
         </Stack.Group>

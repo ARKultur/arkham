@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import Logo from '../images/logo.png';
 import PropTypes from 'prop-types';
@@ -43,41 +43,44 @@ const Login = ({navigation}) => {
   const [password, setPassword] = React.useState('');
 
   return (
-    <View style={styles.container}>
-      <LogoHeader />
+    <ScrollView>
+      <View style={styles.container}>
+        <LogoHeader />
 
-      <TextInput
-        label="Email"
-        value={email}
-        mode="outlined"
-        onChangeText={text => setEmail(text)}
-      />
+        <TextInput
+          label="Email"
+          value={email}
+          mode="outlined"
+          onChangeText={text => setEmail(text)}
+        />
 
-      <TextInput
-        label="Password"
-        secureTextEntry={true}
-        value={password}
-        mode="outlined"
-        onChangeText={text => setPassword(text)}
-      />
+        <TextInput
+          label="Password"
+          secureTextEntry={true}
+          value={password}
+          mode="outlined"
+          onChangeText={text => setPassword(text)}
+        />
 
-      <Text variant="bodyLarge" style={{textAlign: 'right', marginTop: 10}} onPress={() => navigation.navigate('Forgot Password')}>Forgot password?</Text>
+        <Text variant="bodyLarge" style={{textAlign: 'right', marginTop: 10}} onPress={() => navigation.navigate('Forgot Password')}>Forgot password?</Text>
 
-      <ContainerButton navigation={navigation} email={email} password={password}/>
-    </View>
+        <ContainerButton navigation={navigation} email={email} password={password}/>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     padding: 20,
+    paddingTop: 100
   },
   containerLogo: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 50
   },
   logo : {
     width: 224,
@@ -85,9 +88,8 @@ const styles = StyleSheet.create({
     marginBottom: 30
   },
   containerButton : {
-    flex: 1,
-    marginBottom: 30,
     justifyContent: 'flex-end',
+    paddingTop: 80
   },
   button: {
     padding: 10,

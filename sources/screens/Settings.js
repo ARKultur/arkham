@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     marginBottom: 30
   },
   containerButton : {
-    marginTop: 100,
+    marginTop: 40,
   },
   button: {
     padding: 10,
