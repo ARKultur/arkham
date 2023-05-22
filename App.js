@@ -8,7 +8,6 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import LandingScreen from './sources/screens/LandingScreen';
 import Login from './sources/screens/Login';
 import Register from './sources/screens/Register';
-import Home from './sources/screens/Home';
 import Settings from './sources/screens/Settings';
 import ForgotPassword from './sources/screens/ForgotPassword';
 import Appbar from './sources/components/Appbar';
@@ -19,6 +18,7 @@ import { Camera } from 'react-native-vision-camera';
 import ARScreen from './sources/screens/AR';
 import PermissionsPage from './sources/screens/PermissionsPage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Home from './sources/screens/Home';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -104,6 +104,7 @@ const Navigation = () => {
               <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
               <Stack.Screen name="Register" component={Register} />
               <Stack.Screen name="Forgot Password" component={ForgotPassword} />
+              <Stack.Screen name="Home" component={Home} />
               <Stack.Screen name="OTP" component={FormOTP} />
               <Stack.Screen name="Reset Password" component={ResetPassword} options={{headerShown: false}}/>
             </Stack.Group>
