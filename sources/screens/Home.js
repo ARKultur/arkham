@@ -1,23 +1,39 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import {View,StyleSheet,StatusBar,Image,Dimensions} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
-import { Button } from 'react-native-paper';
+import { Button, IconButton, Icon} from 'react-native-paper';
 import { useDispatch, useSelector} from 'react-redux'
-import { get_markers } from '../reducers/Actions/markerAction';
+import { get_markers, filter_markers } from '../reducers/Actions/markerAction';
+import { TextInput } from 'react-native';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const state = useSelector(state => state.markerReducer);
+  const state = useSelector(state => state.markerReducer);  
+  const [userInput, setUserInput] = useState('');
+  const [userFilter, setUserFilter] = useState('');
+  const [makersIsSetup, setMarkerIsSetup] = useState(false);
 
   useEffect (() => {
-    if (state.markers.length == 0) {
+    if (state.markers.length == 0 && !makersIsSetup) {
+      console.log('pass')
       dispatch(get_markers())
+      setMarkerIsSetup(true);
     }
   }, [state])
 
   return (
-      <View style={styles.MapContainer}>
-      <MapView
+    <View style={styles.MapContainer}>  
+      
+      <View style={styles.FilterPart}>
+        <TextInput placeholder='Search...' style={styles.input} value={userInput} onChangeText={text => setUserInput(text)}/>
+        <Button 
+        icon="magnify" 
+        onPress={() => dispatch(filter_markers(userInput, userFilter))} 
+        style={styles.searchButton}/>
+       
+      </View>
+      
+      <MapView  
         provider='google'
         style={styles.mapStyle}
         showsUserLocation={true}
@@ -31,7 +47,6 @@ const Home = () => {
         }}>
         { state.markers.length !== 0 ?
           state.markers.map((marker, index) => {
-            console.log(marker);
             return (
               <Marker
                 key={index}
@@ -42,33 +57,38 @@ const Home = () => {
             )
           })
         :  <View/>}
-
-      </MapView>
-
-      <Button onPress={() => console.log(state.markers)}>test</Button>
-
+      </MapView>  
+      <Button onPress={() => console.log(makersIsSetup)} >test</Button>
     </View>
   )
 };
 
 
 const styles = StyleSheet.create({
-
+  FilterPart: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+  }, 
   MapContainer: {
+    flex: 8
+  },
+  mapStyle: {
     position: 'absolute',
     top: 50,
     left: 0,
     right: 0,
     bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
   },
-  mapStyle: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+
+  input: {
+    borderRadius: 5,
+    height: 40,
+    minWidth: 150,
+    marginLeft: 5,
+    borderWidth: 1,
+    padding: 10,
   },
   map: {
     flex: 1,

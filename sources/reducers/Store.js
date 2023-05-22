@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import userReducer from './userReducer';
+import markerReducer from './markerReducer'
 
 const rootReducer = combineReducers({
-  userReducer
+  userReducer,
+  markerReducer
 });
 
 
