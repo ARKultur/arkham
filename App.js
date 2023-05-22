@@ -19,6 +19,7 @@ import ARScreen from './sources/screens/AR';
 import PermissionsPage from './sources/screens/PermissionsPage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Home from './sources/screens/Home';
+import Suggestions from './sources/screens/Suggestions';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -99,7 +100,7 @@ const Navigation = () => {
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="Forgot Password" component={ForgotPassword} />
             <Stack.Screen name="OTP" component={FormOTP} />
-            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Home" component={Suggestions} />
             <Stack.Screen name="Reset Password" component={ResetPassword} options={{ headerShown: false }} />
           </Stack.Group>
         }
