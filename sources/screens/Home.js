@@ -1,41 +1,41 @@
-import React, { Component, useEffect, useState } from 'react';
-import {View,StyleSheet,StatusBar,Image,Dimensions} from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
-import { Button, IconButton, Icon} from 'react-native-paper';
-import { useDispatch, useSelector} from 'react-redux'
-import { get_markers, filter_markers } from '../reducers/Actions/markerAction';
-import { TextInput } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, TextInput, View } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import { Button } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { filter_markers, get_markers } from '../reducers/Actions/markerAction';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const state = useSelector(state => state.markerReducer);  
+  const state = useSelector(state => state.markerReducer);
   const [userInput, setUserInput] = useState('');
   const [userFilter, setUserFilter] = useState('');
   const [makersIsSetup, setMarkerIsSetup] = useState(false);
 
   useEffect (() => {
     if (state.markers.length == 0 && !makersIsSetup) {
-      console.log('pass')
-      dispatch(get_markers())
+      console.log('pass');
+      dispatch(get_markers());
       setMarkerIsSetup(true);
     }
-  }, [state])
+  }, [state]);
 
   return (
-    <View style={styles.MapContainer}>  
-      
+    <View style={styles.MapContainer}>
+
       <View style={styles.FilterPart}>
         <TextInput placeholder='Search...' style={styles.input} value={userInput} onChangeText={text => setUserInput(text)}/>
-        <Button 
-        icon="magnify" 
-        onPress={() => dispatch(filter_markers(userInput, userFilter))} 
-        style={styles.searchButton}/>
-       
+        <Button
+          icon="magnify"
+          onPress={() => dispatch(filter_markers(userInput, userFilter))}
+          style={styles.searchButton}/>
+
       </View>
-      
-      <MapView  
+
+      <MapView
         provider='google'
         style={styles.mapStyle}
+        customMapStyle={config}
         showsUserLocation={true}
         zoomEnabled={true}
         zoomControlEnabled={true}
@@ -54,13 +54,13 @@ const Home = () => {
                 title={marker.title}
                 description={marker.description}
               />
-            )
+            );
           })
-        :  <View/>}
-      </MapView>  
+          :  <View/>}
+      </MapView>
       <Button onPress={() => console.log(makersIsSetup)} >test</Button>
     </View>
-  )
+  );
 };
 
 
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     flexDirection: 'row',
-  }, 
+  },
   MapContainer: {
     flex: 8
   },
@@ -94,7 +94,211 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 400,
     height: 800,
-   },
+  },
 });
+
+const config = [
+  {
+    'elementType': 'geometry',
+    'stylers': [
+      {
+        'color': '#f5f5f5'
+      }
+    ]
+  },
+  {
+    'elementType': 'labels.text.fill',
+    'stylers': [
+      {
+        'color': '#616161'
+      }
+    ]
+  },
+  {
+    'elementType': 'labels.text.stroke',
+    'stylers': [
+      {
+        'color': '#f5f5f5'
+      }
+    ]
+  },
+  {
+    'featureType': 'administrative',
+    'elementType': 'geometry',
+    'stylers': [
+      {
+        'visibility': 'off'
+      }
+    ]
+  },
+  {
+    'featureType': 'administrative.land_parcel',
+    'stylers': [
+      {
+        'visibility': 'off'
+      }
+    ]
+  },
+  {
+    'featureType': 'administrative.land_parcel',
+    'elementType': 'labels.text.fill',
+    'stylers': [
+      {
+        'color': '#bdbdbd'
+      }
+    ]
+  },
+  {
+    'featureType': 'administrative.neighborhood',
+    'stylers': [
+      {
+        'visibility': 'off'
+      }
+    ]
+  },
+  {
+    'featureType': 'poi',
+    'stylers': [
+      {
+        'visibility': 'off'
+      }
+    ]
+  },
+  {
+    'featureType': 'poi',
+    'elementType': 'geometry',
+    'stylers': [
+      {
+        'color': '#eeeeee'
+      }
+    ]
+  },
+  {
+    'featureType': 'poi',
+    'elementType': 'labels.text.fill',
+    'stylers': [
+      {
+        'color': '#757575'
+      }
+    ]
+  },
+  {
+    'featureType': 'poi.park',
+    'elementType': 'geometry',
+    'stylers': [
+      {
+        'color': '#e5e5e5'
+      }
+    ]
+  },
+  {
+    'featureType': 'poi.park',
+    'elementType': 'labels.text.fill',
+    'stylers': [
+      {
+        'color': '#9e9e9e'
+      }
+    ]
+  },
+  {
+    'featureType': 'road',
+    'elementType': 'geometry',
+    'stylers': [
+      {
+        'color': '#ffffff'
+      }
+    ]
+  },
+  {
+    'featureType': 'road',
+    'elementType': 'labels.icon',
+    'stylers': [
+      {
+        'visibility': 'off'
+      }
+    ]
+  },
+  {
+    'featureType': 'road.arterial',
+    'elementType': 'labels.text.fill',
+    'stylers': [
+      {
+        'color': '#757575'
+      }
+    ]
+  },
+  {
+    'featureType': 'road.highway',
+    'elementType': 'geometry',
+    'stylers': [
+      {
+        'color': '#dadada'
+      }
+    ]
+  },
+  {
+    'featureType': 'road.highway',
+    'elementType': 'labels.text.fill',
+    'stylers': [
+      {
+        'color': '#616161'
+      }
+    ]
+  },
+  {
+    'featureType': 'road.local',
+    'elementType': 'labels.text.fill',
+    'stylers': [
+      {
+        'color': '#9e9e9e'
+      }
+    ]
+  },
+  // {
+  //   'featureType': 'transit',
+  //   'stylers': [
+  //     {
+  //       'visibility': 'off'
+  //     }
+  //   ]
+  // },
+  {
+    'featureType': 'transit.line',
+    'elementType': 'geometry',
+    'stylers': [
+      {
+        'color': '#e5e5e5'
+      }
+    ]
+  },
+  {
+    'featureType': 'transit.station',
+    'elementType': 'geometry',
+    'stylers': [
+      {
+        'color': '#eeeeee'
+      }
+    ]
+  },
+  {
+    'featureType': 'water',
+    'elementType': 'geometry',
+    'stylers': [
+      {
+        'color': '#c9c9c9'
+      }
+    ]
+  },
+  {
+    'featureType': 'water',
+    'elementType': 'labels.text.fill',
+    'stylers': [
+      {
+        'color': '#9e9e9e'
+      }
+    ]
+  }
+];
+
 
 export default Home;

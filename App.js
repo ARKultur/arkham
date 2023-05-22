@@ -87,7 +87,7 @@ const Navigation = () => {
     <NavigationContainer theme={theme}>
       <Stack.Navigator screenOptions={{ header: Appbar, animation: 'none' }}>
         {showPermissionsPage && <Stack.Screen name="PermissionsPage" component={PermissionsPage} options={{ headerShown: false }} />}
-        {!isLoggedIn &&
+        {isLoggedIn &&
           <Stack.Group>
             <Stack.Screen name="Tab" component={BottomNavigation} options={{ headerShown: false }} />
             <Stack.Screen name="Settings" component={Settings} options={{ headerShown: false }} />
@@ -99,6 +99,7 @@ const Navigation = () => {
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="Forgot Password" component={ForgotPassword} />
             <Stack.Screen name="OTP" component={FormOTP} />
+            <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Reset Password" component={ResetPassword} options={{ headerShown: false }} />
           </Stack.Group>
         }
