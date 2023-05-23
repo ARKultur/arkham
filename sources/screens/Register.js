@@ -10,9 +10,10 @@ const ContainerButton = (props) => {
   const {navigation, username, firstName, lastName, email, password, confirmPassword} = props;
   const dispatch = useDispatch();
 
+  
   return (
     <View style={styles.containerButton}>
-      <Button mode="contained" onPress={() => dispatch(register({username, firstName, lastName, email, password, confirmPassword}))} contentStyle={styles.button}>
+      <Button mode="contained" onPress={() => dispatch(register({username, email, password}))} contentStyle={styles.button}>
         <Text style={styles.buttonFont}>Register</Text>
       </Button>
 
