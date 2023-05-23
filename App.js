@@ -48,6 +48,12 @@ const BottomNavigation = () => {
       barStyle={{ backgroundColor: 'white', padding: 0 }}
       labeled={false}
     >
+      <Tab.Screen name="Home" component={Home} options={{
+        headerShown: false,
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="home" color={color} size={25} />
+        ),
+      }} />
       <Tab.Screen name="AR" component={ARScreen} options={{
         headerShown: false,
         tabBarIcon: ({ color }) => (
@@ -81,7 +87,6 @@ const Navigation = () => {
           <Stack.Group>
             <Stack.Screen name="Landing Screen" component={LandingScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-            <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="Forgot Password" component={ForgotPassword} />
             <Stack.Screen name="OTP" component={FormOTP} />

@@ -14,10 +14,10 @@ const Home = () => {
 
   useEffect (() => {
     if (state.markers.length == 0 && !makersIsSetup) {
-      dispatch(get_markers())
+      dispatch(get_markers());
       setMarkerIsSetup(true);
     }
-  }, [state, makersIsSetup])   
+  }, [state, makersIsSetup]);
 
   return (
     <View style={styles.MapContainer}>
@@ -53,11 +53,10 @@ const Home = () => {
                 title={marker.title}
                 description={marker.description}
               />
-            )
-          }) 
-        :  <View/>}
-      </MapView>  
-      <Button onPress={() => console.log(state)} >test</Button>
+            );
+          })
+          :  <View/>}
+      </MapView>
     </View>
   );
 };
