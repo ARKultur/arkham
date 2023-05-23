@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   },
   buttonFont: {
     color: 'white',
-    fontSize: 20
+    fontSize: 17
   },
   container: {
     width: 300,

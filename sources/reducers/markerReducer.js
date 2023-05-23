@@ -1,7 +1,7 @@
 export const MarkerActionType = {
   getMarkers: 'GET_MARKERS',
   filterMarkers: 'FILTER_MARKERS'
-}
+};
 /*const initialState = {
   markers: [],
 };
@@ -40,20 +40,20 @@ const markerSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder.addCase(get_markers.pending, state=> {
-      state.isloading = true
-    })
+      state.isloading = true;
+    });
     builder.addCase(get_markers.fulfilled, (state, action) => {
       state.isloading = false,
-      state.markers = action.payload
-    })
+      state.markers = action.payload;
+    });
     builder.addCase(get_markers.rejected, (state) => {
       state.isloading = false,
-      state.markers = []
-    })
+      state.markers = [];
+    });
     builder.addCase(filter_markers.fulfilled, (state, action) => {
       state.isloading = false,
-      state.markers = action.payload
-    })
+      state.markers = action.payload;
+    });
   },
 });
 
