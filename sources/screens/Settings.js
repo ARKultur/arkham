@@ -20,7 +20,7 @@ const Settings = ({navigation}) => {
         <Text variant="headlineLarge" style={styles.headlines}>Settings</Text>
         <Text variant="headlineSmall" style={styles.headlines}>Personnal info</Text>
 
-        <TextInput
+        {/* <TextInput
           label="First Name"
           value={firstName}
           mode="outlined"
@@ -34,6 +34,14 @@ const Settings = ({navigation}) => {
           mode="outlined"
           onChangeText={text => setLastName(text)}
           style={styles.textInput}
+        /> */}
+
+        <TextInput
+          label="Username"
+          value={lastName}
+          mode="outlined"
+          onChangeText={text => setLastName(text)}
+          style={styles.textInput}
         />
 
         <TextInput
@@ -43,7 +51,7 @@ const Settings = ({navigation}) => {
           onChangeText={text => setEmail(text)}
           style={styles.textInput}
         />
-
+        {/* 
         <Text variant="headlineSmall" style={styles.headlines}>Password</Text>
         <TextInput
           label="Password"
@@ -52,7 +60,7 @@ const Settings = ({navigation}) => {
           mode="outlined"
           onChangeText={text => setPassword(text)}
           style={styles.textInput}
-        />
+        /> */}
 
         <View style={styles.containerButton}>
           <Button mode="contained" onPress={() => {

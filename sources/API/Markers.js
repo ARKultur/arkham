@@ -1,11 +1,21 @@
 import axios from 'axios';
 import { API_URL } from '../constants/API';
 
-const getMarkers = (body, thunkAPI) => {
+const getMarkers = async (thunkAPI) => {
+    const URL = API_URL + '/api/nodes/all';
+    try {
+        const response = await axios.get(URL)
+        return response.data;
+    } catch(error) {
+        console.log(error.response);
+        thunkAPI.rejectWithValue(error.response.data);
+        throw error.response.data;
+    }
+}
   //try {
     //const response = await axios.post(API_URL + '/markers')
     //return response.data;
-    const tmpData = [
+   /* const tmpData = [
         {
             title: 'test 1',
             descriptions: 'description 1',
@@ -28,11 +38,11 @@ const getMarkers = (body, thunkAPI) => {
 
         },
     ];
-    return tmpData;
+    return tmpData;*/
 //  } catch (error) {
     //console.log(error.response.data);
 //  }
-};
+
 
 const MarkerService = {
   getMarkers,

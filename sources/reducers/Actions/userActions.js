@@ -3,16 +3,14 @@ import AuthService from '../../API/Auth';
 
 export const register = createAsyncThunk(
   'auth/register',
-  async ({username, firstName, lastName, email, password}, thunkAPI) => {
+  async ({username, email, password}, thunkAPI) => {
     try {
-      const body = {
+      const jsonBody = {
         email: email,
         username: username,
-        first_name: firstName,
-        last_name: lastName,
         password: password,
       };
-      const result = await AuthService.register(body, thunkAPI);
+      const result = await AuthService.register(jsonBody, thunkAPI);
 
       return result;
     } catch (error) {
@@ -28,7 +26,6 @@ export const login = createAsyncThunk(
   async ({ email, password }, thunkAPI) => {
     try {
       const data = await AuthService.login(email, password, thunkAPI);
-
       return data;
     } catch (error) {
       alert('Invalid credentials.');

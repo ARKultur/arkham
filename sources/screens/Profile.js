@@ -2,7 +2,8 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { Avatar, Button, Card, Paragraph, Text, Title } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../reducers/Actions/userActions';
 
 const CardInfo = ({title, value}) => {
   return (
@@ -22,22 +23,27 @@ CardInfo.propTypes = {
 
 const Profile = ({navigation}) => {
   const {user} = useSelector(state => state.userReducer);
+  const dispatch = useDispatch();
 
   return (
     <View style={{padding: 20, flex: 1}}>
       <View style={styles.container}>
 
-        <Avatar.Text size={150} label={user.last_name[0] + user.first_name[0]} />
-        <Text variant="headlineLarge" style={styles.headlines}>{user.last_name + user.first_name}</Text>
+        <Avatar.Text size={150} label={user && user.username && user.username[0]} />
+        <Text variant="headlineLarge" style={styles.headlines}>{user && user.username}</Text>
       </View>
 
       <View style={styles.containerContent}>
-        <CardInfo title="First Name" value={user.last_name} />
-        <CardInfo title="Last Name" value={user.first_name} />
+        {/* <CardInfo title="First Name" value={user.last_name} /> */}
+        {/* <CardInfo title="Last Name" value={user.first_name} /> */}
+        <CardInfo title="Username" value={user.username} />
         <CardInfo title="Email" value={user.email} />
         <View style={styles.containerButton}>
-          <Button mode="contained" onPress={() => navigation.navigate('Settings')} contentStyle={styles.button}>
+          {/* <Button mode="contained" onPress={() => navigation.navigate('Settings')} contentStyle={styles.button}>
             <Text style={styles.button}>Settings</Text>
+          </Button> */}
+          <Button mode="outlined" style={{marginTop: 10}} onPress={() => dispatch(logout())}>
+            Logout
           </Button>
         </View>
       </View>

@@ -8,17 +8,16 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import LandingScreen from './sources/screens/LandingScreen';
 import Login from './sources/screens/Login';
 import Register from './sources/screens/Register';
-import Home from './sources/screens/Home';
 import Settings from './sources/screens/Settings';
 import ForgotPassword from './sources/screens/ForgotPassword';
 import Appbar from './sources/components/Appbar';
 import ResetPassword from './sources/screens/ResetPassword';
 import FormOTP from './sources/screens/OTP';
 import Profile from './sources/screens/Profile';
-import { Camera } from 'react-native-vision-camera';
 import ARScreen from './sources/screens/AR';
-import PermissionsPage from './sources/screens/PermissionsPage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Home from './sources/screens/Home';
+import Suggestions from './sources/screens/Suggestions';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -49,6 +48,12 @@ const BottomNavigation = () => {
       barStyle={{ backgroundColor: 'white', padding: 0 }}
       labeled={false}
     >
+      <Tab.Screen name="Home" component={Home} options={{
+        headerShown: false,
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="home" color={color} size={25} />
+        ),
+      }} />
       <Tab.Screen name="AR" component={ARScreen} options={{
         headerShown: false,
         tabBarIcon: ({ color }) => (
@@ -67,28 +72,14 @@ const BottomNavigation = () => {
 
 const Navigation = () => {
   const { isLoggedIn } = useSelector(state => state.userReducer);
-  const [cameraPermission, setCameraPermission] = useState();
-  const [microphonePermission, setMicrophonePermission] = useState();
 
-  useEffect(() => {
-    Camera.getCameraPermissionStatus().then(setCameraPermission);
-    Camera.getMicrophonePermissionStatus().then(setMicrophonePermission);
-  }, []);
-
-
-  if (cameraPermission == null || microphonePermission == null) {
-    // still loading
-    return null;
-  }
-  const showPermissionsPage = cameraPermission !== 'authorized' ||
-    microphonePermission === 'not-determined';
 
   return (
     <NavigationContainer theme={theme}>
       <Stack.Navigator screenOptions={{ header: Appbar, animation: 'none' }}>
-        {showPermissionsPage && <Stack.Screen name="PermissionsPage" component={PermissionsPage} options={{ headerShown: false }} />}
-        {!isLoggedIn &&
+        {isLoggedIn &&
           <Stack.Group>
+            <Stack.Screen name="Suggestions" component={Suggestions} />
             <Stack.Screen name="Tab" component={BottomNavigation} options={{ headerShown: false }} />
             <Stack.Screen name="Settings" component={Settings} options={{ headerShown: false }} />
           </Stack.Group>
