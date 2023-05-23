@@ -149,10 +149,10 @@ const Item = ({image}) => {
 const Suggestions = ({navigation}) => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
+      <BottomSheetModalProvider style={{ flex: 1 }}>
         <SafeAreaView style={{flex: 1}}>
 
-          <View style={{flex: 0.2, justifyContent: 'center', alignSelf: 'center', padding: 50}}>
+          <View style={{flex: 0.3, justifyContent: 'center', alignSelf: 'center', paddingHorizontal: 50, paddingTop: 50}}>
             <Text variant="headlineSmall" style={{textAlign: 'center'}}>
               Suggestions
             </Text>
@@ -170,7 +170,7 @@ const Suggestions = ({navigation}) => {
             {images.map((image, index) => <Item key={index} image={image} />)}
           </Swiper>
 
-          <View style={{padding: 20, flex: 0.2}}>
+          <View style={{paddingHorizontal: 20, flex: 0.2}}>
             <View style={styles.containerButton}>
 
               <Button mode="contained" onPress={() => navigation.navigate('Tab')} contentStyle={styles.button}>
@@ -196,14 +196,13 @@ const styles = StyleSheet.create({
   containerButton : {
     flex: 1,
     justifyContent: 'flex-end',
-    marginBottom: 30,
   },
   button: {
     padding: 10,
   },
   buttonFont: {
     color: 'white',
-    fontSize: 20
+    fontSize: 18
   },
   container: {
     width: 300,
@@ -215,9 +214,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 150,
-  },
-  contentContainer: {
-    flex: 1,
   },
 });
 
