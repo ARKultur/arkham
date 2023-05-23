@@ -1,19 +1,21 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import DividerText from '../components/DividerText';
 import { register } from '../reducers/Actions/userActions';
-import { useDispatch } from 'react-redux';
 
 const ContainerButton = (props) => {
   const {navigation, username, firstName, lastName, email, password, confirmPassword} = props;
   const dispatch = useDispatch();
 
-  
   return (
     <View style={styles.containerButton}>
-      <Button mode="contained" onPress={() => dispatch(register({username, email, password}))} contentStyle={styles.button}>
+      <Button mode="contained" onPress={() => {
+        dispatch(register({username, email, password}));
+        navigation.navigate('Login');
+      }} contentStyle={styles.button}>
         <Text style={styles.buttonFont}>Register</Text>
       </Button>
 
@@ -46,7 +48,7 @@ const Register = ({navigation}) => {
           onChangeText={text => setUsername(text)}
           style={styles.textInput}
         />
-        <TextInput
+        {/* <TextInput
           label="First Name"
           value={firstName}
           mode="outlined"
@@ -59,7 +61,7 @@ const Register = ({navigation}) => {
           mode="outlined"
           onChangeText={text => setLastName(text)}
           style={styles.textInput}
-        />
+        /> */}
         <TextInput
           label="Email"
           value={email}

@@ -2,10 +2,10 @@ import axios from 'axios';
 import { API_URL } from '../constants/API';
 
 const getUser = async (email, token, thunkAPI) => {
-  const URL = API_URL + `/api/customers/?email=${email}`
+  const URL = API_URL + `/api/customers/?email=${email}`;
   const params = {
     headers : {'Authorization': 'Bearer ' + token},
-  }
+  };
 
   try {
     const response = await axios.get(URL, params);
@@ -16,21 +16,6 @@ const getUser = async (email, token, thunkAPI) => {
     throw error.response.data;
   }
 };
-
-/*const getTmpUser = async (id, thunkAPI) => { // This is the same as getUser, but we use this until API fixes the issue
-  try {
-    const response = await axios.get(API_URL + '/customer');
-
-    const user = response.data.results.filter(user => user.id === id)[0].auth;
-    user.id = id;
-
-    return user;
-  } catch (error) {
-    console.log(error.response.data);
-    thunkAPI.rejectWithValue(error.response.data);
-    throw error.response.data;
-  }
-};*/
 
 const editUser = async (id, body) => {
   try {

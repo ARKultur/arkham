@@ -61,7 +61,7 @@ const Login = ({navigation}) => {
         onChangeText={text => setPassword(text)}
       />
 
-      <Text variant="bodyLarge" style={{textAlign: 'right', marginTop: 10}} onPress={() => navigation.navigate('Forgot Password')}>Forgot password?</Text>
+      {/* <Text variant="bodyLarge" style={{textAlign: 'right', marginTop: 10}} onPress={() => navigation.navigate('Forgot Password')}>Forgot password?</Text> */}
 
       <ContainerButton navigation={navigation} email={email} password={password}/>
     </View>
