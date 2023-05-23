@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { API_URL } from '../constants/API';
 
-const getUser = async (token, id, thunkAPI) => {
-  try {
-    const response = await axios.get(API_URL + `/customer/${id}`, {
-      headers :{
-        'Authorization': 'Bearer ' + token
-      }
-    });
+const getUser = async (email, token, thunkAPI) => {
+  const URL = API_URL + `/customer/`
+  const params = {
+    headers : {'Authorization': 'Bearer ' + token},
+    email : email
+  }
 
+  try {
+    const response = await axios.get(URL, params);
     return response.data;
   } catch (error) {
     console.log(error.response.data);

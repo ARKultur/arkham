@@ -2,7 +2,7 @@ export const MarkerActionType = {
   getMarkers: 'GET_MARKERS',
   filterMarkers: 'FILTER_MARKERS'
 }
-const initialState = {
+/*const initialState = {
   markers: [],
 };
 
@@ -21,6 +21,40 @@ const markerReducer = (state = initialState, action) => {
     default:
       return state
   };
+};*/
+
+
+import { createSlice } from '@reduxjs/toolkit';
+import { get_markers } from './Actions/markerAction';
+
+const initialState = {
+  markers: [],
+  isloading: false,
 };
 
-export default markerReducer;
+
+
+const markerSlice = createSlice({
+  name: 'marker',
+  initialState,
+  reducers: {},
+  extraReducers: builder => {
+    builder.addCase(get_markers.pending, state=> {
+      state.isloading = true
+    })
+    builder.addCase(get_markers.fulfilled, (state, action) => {
+      state.isloading = false,
+      state.markers = action.payload
+    })
+    builder.addCase(get_markers.rejected, (state) => {
+      state.isloading = false,
+      markers = []
+    })
+  },
+});
+
+const { reducer } = markerSlice;
+export default reducer;
+
+
+//export default markerReducer;

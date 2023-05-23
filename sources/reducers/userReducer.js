@@ -20,7 +20,6 @@ const userSlice = createSlice({
     [login.fulfilled]: (state, action) => {
       state.isLoggedIn = true;
       state.user = action.payload;
-      console.log(action.payload);
     },
     [login.rejected]: (state) => {
       state.isLoggedIn = false;

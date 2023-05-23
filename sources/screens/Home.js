@@ -15,11 +15,10 @@ const Home = () => {
 
   useEffect (() => {
     if (state.markers.length == 0 && !makersIsSetup) {
-      console.log('pass')
       dispatch(get_markers())
       setMarkerIsSetup(true);
     }
-  }, [state])   
+  }, [state, makersIsSetup])   
 
   return (
     <View style={styles.MapContainer}>  
@@ -58,7 +57,7 @@ const Home = () => {
           }) 
         :  <View/>}
       </MapView>  
-      <Button onPress={() => console.log(makersIsSetup)} >test</Button>
+      <Button onPress={() => console.log(state)} >test</Button>
     </View>
   )
 };

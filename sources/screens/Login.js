@@ -24,7 +24,7 @@ const ContainerButton = (props) => {
 
   return (
     <View style={styles.containerButton}>
-      <Button mode="contained" onPress={() => navigation.navigate('Home')}/*dispatch(login({email, password}))}*/ contentStyle={styles.button}>
+      <Button mode="contained" onPress={() => dispatch(login({email, password}))} contentStyle={styles.button}>
         <Text style={styles.buttonFont}>Login</Text>
       </Button>
 

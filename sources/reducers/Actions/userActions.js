@@ -28,7 +28,6 @@ export const login = createAsyncThunk(
   async ({ email, password }, thunkAPI) => {
     try {
       const data = await AuthService.login(email, password, thunkAPI);
-
       return data;
     } catch (error) {
       alert('Invalid credentials.');
