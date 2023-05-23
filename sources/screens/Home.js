@@ -26,7 +26,7 @@ const Home = () => {
         <TextInput placeholder='Search...' style={styles.input} value={userInput} onChangeText={text => setUserInput(text)}/>
         <Button
           icon="magnify"
-          onPress={() => dispatch(filter_markers(userInput, userFilter))}
+          onPress={() => dispatch(filter_markers({userInput, userFilter}))}
           style={styles.searchButton}/>
 
       </View>
@@ -39,12 +39,12 @@ const Home = () => {
         zoomEnabled={true}
         zoomControlEnabled={true}
         initialRegion={{
-          latitude: 46.8137431,
-          longitude: -71.2084061,
+          latitude: 45.74600601196289 ,
+          longitude: 4.842291831970215,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
-        { state.markers.length !== 0 ?
+        { state.markers.length !== 0 &&
           state.markers.map((marker, index) => {
             return (
               <Marker
@@ -54,8 +54,7 @@ const Home = () => {
                 description={marker.description}
               />
             );
-          })
-          :  <View/>}
+          })}
       </MapView>
     </View>
   );

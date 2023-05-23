@@ -25,7 +25,7 @@ const markerReducer = (state = initialState, action) => {
 
 
 import { createSlice } from '@reduxjs/toolkit';
-import { get_markers } from './Actions/markerAction';
+import { filter_markers, get_markers } from './Actions/markerAction';
 
 const initialState = {
   markers: [],
@@ -48,7 +48,11 @@ const markerSlice = createSlice({
     })
     builder.addCase(get_markers.rejected, (state) => {
       state.isloading = false,
-      markers = []
+      state.markers = []
+    })
+    builder.addCase(filter_markers.fulfilled, (state, action) => {
+      state.isloading = false,
+      state.markers = action.payload
     })
   },
 });
