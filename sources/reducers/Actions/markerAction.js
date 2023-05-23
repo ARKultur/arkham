@@ -1,23 +1,37 @@
 import MarkerService from '../../API/Markers'
 import { MarkerActionType } from '../markerReducer';
-import Store  from '../Store';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 
-export const get_markers = () => {
-    //try {
+
+export const get_markers = createAsyncThunk(
+    'marker/get',
+    async (thunkAPI) => {
+      try { 
+        const result = await new MarkerService.getMarkers(thunkAPI);
+        return result;
+      } catch (error) {
+        alert('Invalid credentials.');
+        console.error(error);
+        throw error;
+      }
+    }
+  );
+
+
+/*export const get_markers = () => {
+    try {
         const markers = new MarkerService.getMarkers();
         return {
             type: MarkerActionType.getMarkers, 
             payload: markers,
+        }} catch (error) {
+            console.error(error);
+            throw error;
         }
-   // } catch (error) {
-    //    alert('Invalid credentials.');
-    //    console.error(error);
-    //    throw error;
-    //}
-}
+}*/
 
 export const filter_markers = (userInput, userFilter) => {
-    const markers = new MarkerService.getMarkers();
+    const markers = MarkerService.getMarkers();
     const filtered_marker = [];
 
     markers.map((marker) => {

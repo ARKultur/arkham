@@ -3,17 +3,15 @@ import { API_URL } from '../constants/API';
 import UserServices from './User';
 
 const register = async (body, thunkAPI) => {
-  try {
-    const response = await axios.post(API_URL + '/register', {
-      auth: {
-        email: body.email.toLowerCase(),
-        username: body.username,
-        first_name: body.first_name,
-        last_name: body.last_name,
-        password: body.password,
-      },
-    });
+  const URL = API_URL + "api/customers/register/"
+  const jsonBody = {
+    email: body.email.toLowerCase(),
+    password: body.password,
+    username: body.username,
+  }
 
+  try {
+    const response = await axios.post(URL, jsonBody);
     return response.data;
   } catch (error) {
     console.log(error.response.data);
@@ -23,14 +21,14 @@ const register = async (body, thunkAPI) => {
 };
 
 const login = async (email, password, thunkAPI) => {
-  try {
-    const response = await axios.post(API_URL + '/login', {
-      email: email.toLowerCase(),
-      password,
-    });
-    const userData = await UserServices.getTmpUser(response.data.id);
+  const URL = API_URL + '/api/customer/login';
+  const jsonBody = {email: email.toLowerCase(), password}
 
-    userData.token = response.data.token;
+  try {
+    const response = await axios.post(URL, jsonBody);
+    const userData = await UserServices.getUser(email, response.data.token);
+
+    userData.accesToken = response.data.token;
     return userData;
   } catch (error) {
     console.log(error.response.data);
