@@ -196,13 +196,14 @@ const styles = StyleSheet.create({
   containerButton : {
     flex: 1,
     justifyContent: 'flex-end',
+    marginBottom: 10
   },
   button: {
     padding: 10,
   },
   buttonFont: {
     color: 'white',
-    fontSize: 18
+    fontSize: 20
   },
   container: {
     width: 300,
