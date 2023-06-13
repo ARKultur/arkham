@@ -87,12 +87,12 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
       virtualObjectTexture =
         Texture.createFromAsset(
           render,
-          "models/spatial_marker_baked.png",
+          "models/wolf/textures/Wolf_Body.jpg",
           Texture.WrapMode.CLAMP_TO_EDGE,
           Texture.ColorFormat.SRGB
         )
 
-      virtualObjectMesh = Mesh.createFromAsset(render, "models/geospatial_marker.obj");
+      virtualObjectMesh = Mesh.createFromAsset(render, "models/wolf/Wolf_One_obj.obj");
       virtualObjectShader =
         Shader.createFromAssets(
           render,
@@ -205,13 +205,21 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
 
     // Place the earth anchor at the same altitude as that of the camera to make it easier to view.
     val altitude = earth.cameraGeospatialPose.altitude - 1
-// The rotation quaternion of the anchor in the East-Up-South (EUS) coordinate system.
+// The rotation quaternion of the anchor in the
+// East-Up-South (EUS) coordinate system.
     val qx = 0f
     val qy = 0f
     val qz = 0f
     val qw = 1f
-    earthAnchor =
-earth.createAnchor(latLng.latitude, latLng.longitude, altitude, qx, qy, qz, qw)
+    earthAnchor = earth.createAnchor(
+        latLng.latitude,
+        latLng.longitude,
+        altitude,
+        qx,
+        qy,
+        qz,
+        qw
+    )
 
     activity.view.mapView?.earthMarker?.apply {
       position = latLng
