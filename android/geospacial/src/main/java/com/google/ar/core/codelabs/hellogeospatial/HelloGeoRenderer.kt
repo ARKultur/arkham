@@ -84,6 +84,8 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
       virtualSceneFramebuffer = Framebuffer(render, /*width=*/ 1, /*height=*/ 1)
 
       // Virtual object to render (Geospatial Marker)
+
+      Log.i("check", render.toString())
       virtualObjectTexture =
         Texture.createFromAsset(
           render,
@@ -189,12 +191,16 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
     earthAnchor?.let {
       render.renderCompassAtAnchor(it)
     }
+    earthAnchor2?.let {
+      render.renderCompassAtAnchor(it)
+    }
 
     // Compose the virtual scene with the background.
     backgroundRenderer.drawVirtualScene(render, virtualSceneFramebuffer, Z_NEAR, Z_FAR)
   }
 
   var earthAnchor: Anchor? = null
+  var earthAnchor2: Anchor? = null
 
   fun onMapClick(latLng: LatLng) {
     val earth = session?.earth ?: return
@@ -202,6 +208,7 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
       return
     }
     earthAnchor?.detach()
+    earthAnchor2?.detach()
 
     // Place the earth anchor at the same altitude as that of the camera to make it easier to view.
     val altitude = earth.cameraGeospatialPose.altitude - 1
@@ -220,9 +227,23 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
         qz,
         qw
     )
+    earthAnchor2 = earth.createAnchor(
+        latLng.latitude - 0.00001,
+        latLng.longitude,
+        altitude,
+        qx,
+        qy,
+        qz,
+        qw
+    )
 
     activity.view.mapView?.earthMarker?.apply {
       position = latLng
+      isVisible = true
+    }
+    var latLng2 = LatLng(latLng.latitude - 0.00001, latLng.longitude)
+    activity.view.mapView?.earthMarker2?.apply {
+      position = latLng2
       isVisible = true
     }
   }
