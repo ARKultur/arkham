@@ -32,6 +32,8 @@ import com.google.ar.core.examples.java.common.samplerender.Texture
 import com.google.ar.core.examples.java.common.samplerender.arcore.BackgroundRenderer
 import com.google.ar.core.exceptions.CameraNotAvailableException
 import java.io.IOException
+import kotlin.system.exitProcess
+import kotlin.collections.mutableMapOf
 
 
 class HelloGeoRenderer(val activity: HelloGeoActivity) :
@@ -52,6 +54,7 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
   lateinit var virtualObjectMesh: Mesh
   lateinit var virtualObjectShader: Shader
   lateinit var virtualObjectTexture: Texture
+  //var anchors: Array<Triple<Float, Float, Float>>
 
   // Temporary matrix allocated here to reduce number of allocations for each frame.
   val modelMatrix = FloatArray(16)
@@ -66,6 +69,7 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
 
   val displayRotationHelper = DisplayRotationHelper(activity)
   val trackingStateHelper = TrackingStateHelper(activity)
+  var anchors: ArrayList<Anchor> = ArrayList<Anchor>()
 
   override fun onResume(owner: LifecycleOwner) {
     displayRotationHelper.onResume()
@@ -85,7 +89,6 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
 
       // Virtual object to render (Geospatial Marker)
 
-      Log.i("check", render.toString())
       virtualObjectTexture =
         Texture.createFromAsset(
           render,
@@ -210,46 +213,56 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
     earthAnchor?.detach()
     earthAnchor2?.detach()
 
-    // Place the earth anchor at the same altitude as that of the camera to make it easier to view.
+   // // Place the earth anchor at the same altitude as that of the camera to make it easier to view.
+   // val altitude = earth.cameraGeospatialPose.altitude - 1
+// //The rotation quaternion of the anchor in the
+// //East-Up-South (EUS) coordinate system.
+
     val altitude = earth.cameraGeospatialPose.altitude - 1
-// The rotation quaternion of the anchor in the
-// East-Up-South (EUS) coordinate system.
     val qx = 0f
     val qy = 0f
     val qz = 0f
     val qw = 1f
-    earthAnchor = earth.createAnchor(
-        latLng.latitude,
-        latLng.longitude,
-        altitude,
-        qx,
-        qy,
-        qz,
-        qw
-    )
-    earthAnchor2 = earth.createAnchor(
-        latLng.latitude - 0.00001,
-        latLng.longitude,
-        altitude,
-        qx,
-        qy,
-        qz,
-        qw
-    )
+    val earthAnchor = earth.createAnchor(
+            latLng.longitude,
+            latLng.latitude,
+            altitude,
+            qx,
+            qy,
+            qz,
+            qw
+            )
+    val earthAnchor2 = earth.createAnchor(
+            (latLng.longitude - 0.00001),
+            latLng.latitude,
+            altitude,
+            qx,
+            qy,
+            qz,
+            qw
+            )
+    anchors.add(earthAnchor)
+    anchors.add(earthAnchor2)
 
-    activity.view.mapView?.earthMarker?.apply {
-      position = latLng
-      isVisible = true
-    }
-    var latLng2 = LatLng(latLng.latitude - 0.00001, latLng.longitude)
-    activity.view.mapView?.earthMarker2?.apply {
-      position = latLng2
-      isVisible = true
-    }
+   // for (anchor in anchors) {
+   //     activity.view.mapView?.earthMarker?.apply {
+   //         position = latLng
+   //         isVisible = true
+   //     }
+   // }
+   activity.view.mapView?.earthMarker?.apply {
+       position = latLng
+       isVisible = true
+   }
+   var latLng2 = LatLng(latLng.latitude - 0.00001, latLng.longitude)
+   activity.view.mapView?.earthMarker2?.apply {
+     position = latLng2
+     isVisible = true
+   }
   }
 
   private fun SampleRender.renderCompassAtAnchor(anchor: Anchor) {
-    // Get the current pose of the Anchor in world space. The Anchor pose is updated
+      // Get the current pose of the Anchor in world space. The Anchor pose is updated
     // during calls to session.update() as ARCore refines its estimate of the world.
     anchor.pose.toMatrix(modelMatrix, 0)
 
