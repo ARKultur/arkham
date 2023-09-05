@@ -34,15 +34,14 @@ import com.google.ar.core.codelabs.hellogeospatial.HelloGeoActivity
 import com.google.ar.core.codelabs.hellogeospatial.R
 
 class MapView(val activity: HelloGeoActivity, val googleMap: GoogleMap) {
-  private val CAMERA_MARKER_COLOR: Int = Color.argb(255, 0, 255, 0)
-  private val EARTH_MARKER_COLOR: Int = Color.argb(255, 125, 125, 125)
+  val CAMERA_MARKER_COLOR: Int = Color.argb(255, 0, 255, 0)
+  val EARTH_MARKER_COLOR: Int = Color.argb(255, 125, 125, 125)
 
   var setInitialCameraPosition = false
   val cameraMarker = createMarker(CAMERA_MARKER_COLOR)
   var cameraIdle = true
 
-  val earthMarker = createMarker(EARTH_MARKER_COLOR)
-  val earthMarker2 = createMarker(EARTH_MARKER_COLOR)
+  var earthMarkers: MutableList<Marker?> = mutableListOf<Marker?>()
 
   init {
     googleMap.uiSettings.apply {
@@ -87,7 +86,7 @@ class MapView(val activity: HelloGeoActivity, val googleMap: GoogleMap) {
   }
 
   /** Creates and adds a 2D anchor marker on the 2D map view.  */
-  private fun createMarker(
+  public fun createMarker(
     color: Int,
   ): Marker {
     val markersOptions = MarkerOptions()
