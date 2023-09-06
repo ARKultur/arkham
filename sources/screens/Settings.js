@@ -1,58 +1,86 @@
-import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
-import UserServices from '../API/User';
-import { logout } from '../reducers/Actions/userActions';
+import React from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {Button, Text, TextInput} from 'react-native-paper';
+import {useDispatch, useSelector} from 'react-redux';
+import {editUser, logout} from '../reducers/Actions/userActions';
 
 const Settings = ({navigation}) => {
   const {user} = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
-  const [firstName, setFirstName] = React.useState(user.first_name || '');
-  const [lastName, setLastName] = React.useState(user.last_name || '');
-  const [email, setEmail] = React.useState(user.email || '');
+  const [username, setUsername] = React.useState(user.username || '');
   const [password, setPassword] = React.useState('');
 
+  const handleEdit = async () => {
+    try {
+      await dispatch(
+        editUser({
+          username: username,
+          email: user.email,
+          token: user.accessToken,
+        }),
+      );
+      navigation.navigate('ProfileScreen');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePasswdEdit = async () => {
+    await dispatch(
+      editUser({
+        email: user.email,
+        password: password,
+        token: user.accessToken,
+      }),
+    );
+    navigation.navigate('ProfileScreen');
+  };
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text variant="headlineLarge" style={styles.headlines}>Settings</Text>
-        <Text variant="headlineSmall" style={styles.headlines}>Personnal info</Text>
-
-        {/* <TextInput
-          label="First Name"
-          value={firstName}
-          mode="outlined"
-          onChangeText={text => setFirstName(text)}
-          style={styles.textInput}
-        />
-
-        <TextInput
-          label="Last Name"
-          value={lastName}
-          mode="outlined"
-          onChangeText={text => setLastName(text)}
-          style={styles.textInput}
-        /> */}
+        <Text variant="headlineLarge" style={styles.headlines}>
+          Settings
+        </Text>
+        <Text variant="headlineSmall" style={styles.headlines}>
+          Personnal info
+        </Text>
 
         <TextInput
           label="Username"
-          value={lastName}
+          value={username}
           mode="outlined"
-          onChangeText={text => setLastName(text)}
+          onChangeText={text => setUsername(text)}
           style={styles.textInput}
         />
 
-        <TextInput
-          label="Email"
-          value={email}
-          mode="outlined"
-          onChangeText={text => setEmail(text)}
-          style={styles.textInput}
+        <View style={styles.containerButton}>
+          <Button
+            mode="contained"
+            onPress={handleEdit}
+            contentStyle={styles.button}>
+            <Text style={styles.buttonFont}>Apply</Text>
+          </Button>
+          <Button
+            mode="outlined"
+            style={{marginTop: 10}}
+            onPress={() => navigation.navigate('Suggestions')}>
+            Suggestions
+          </Button>
+        </View>
+
+        <View
+          style={{
+            borderBottomColor: 'black',
+            borderBottomWidth: 1,
+            marginBottom: 20,
+            marginTop: 20,
+          }}
         />
-        {/* 
-        <Text variant="headlineSmall" style={styles.headlines}>Password</Text>
+
+        <Text variant="headlineSmall" style={styles.headlines}>
+          Password
+        </Text>
         <TextInput
           label="Password"
           secureTextEntry={true}
@@ -60,22 +88,23 @@ const Settings = ({navigation}) => {
           mode="outlined"
           onChangeText={text => setPassword(text)}
           style={styles.textInput}
-        /> */}
+        />
 
         <View style={styles.containerButton}>
-          <Button mode="contained" onPress={() => {
-            UserServices.editUser(user.id, {first_name: firstName, last_name: lastName, email: email, password: password, token: user.token});
-            navigation.navigate('Profile');
-          }} contentStyle={styles.button}>
+          <Button
+            mode="contained"
+            onPress={handlePasswdEdit}
+            contentStyle={styles.button}>
             <Text style={styles.buttonFont}>Apply</Text>
           </Button>
 
-          <Button mode="outlined" style={{marginTop: 10}} onPress={() => dispatch(logout())}>
+          <Button
+            mode="outlined"
+            style={{marginTop: 10}}
+            onPress={() => dispatch(logout())}>
             Logout
           </Button>
-
         </View>
-
       </View>
     </ScrollView>
   );
@@ -84,33 +113,33 @@ const Settings = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    paddingTop: 60
+    paddingTop: 60,
   },
   containerLogo: {
     padding: 50,
     alignItems: 'center',
   },
-  logo : {
+  logo: {
     width: 224,
     height: 224,
-    marginBottom: 30
+    marginBottom: 30,
   },
-  containerButton : {
-    marginTop: 100,
+  containerButton: {
+    marginTop: 50,
   },
   button: {
     padding: 10,
   },
   buttonFont: {
     color: 'white',
-    fontSize: 20
+    fontSize: 20,
   },
   headlines: {
     marginBottom: 10,
   },
   textInput: {
-    marginBottom: 10
-  }
+    marginBottom: 10,
+  },
 });
 
 Settings.propTypes = {
