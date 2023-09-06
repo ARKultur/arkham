@@ -1,21 +1,34 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {Button, Text, TextInput} from 'react-native-paper';
+import {useDispatch} from 'react-redux';
 import DividerText from '../components/DividerText';
-import { register } from '../reducers/Actions/userActions';
+import {register} from '../reducers/Actions/userActions';
+import {subToNewsLetter} from '../API/Newsletter';
 
-const ContainerButton = (props) => {
-  const {navigation, username, firstName, lastName, email, password, confirmPassword} = props;
+const ContainerButton = props => {
+  const {
+    navigation,
+    username,
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPassword,
+  } = props;
   const dispatch = useDispatch();
 
   return (
     <View style={styles.containerButton}>
-      <Button mode="contained" onPress={() => {
-        dispatch(register({username, email, password}));
-        navigation.navigate('Login');
-      }} contentStyle={styles.button}>
+      <Button
+        mode="contained"
+        onPress={() => {
+          dispatch(register({username, email, password}));
+          subToNewsLetter(email);
+          navigation.navigate('Login');
+        }}
+        contentStyle={styles.button}>
         <Text style={styles.buttonFont}>Register</Text>
       </Button>
 
@@ -24,7 +37,6 @@ const ContainerButton = (props) => {
       <Button mode="outlined" onPress={() => navigation.navigate('Login')}>
         Login
       </Button>
-
     </View>
   );
 };
@@ -40,7 +52,9 @@ const Register = ({navigation}) => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text variant="headlineSmall" style={styles.headlines}>Personnal info</Text>
+        <Text variant="headlineSmall" style={styles.headlines}>
+          Personnal info
+        </Text>
         <TextInput
           label="Username"
           value={username}
@@ -69,7 +83,9 @@ const Register = ({navigation}) => {
           onChangeText={text => setEmail(text)}
           style={styles.textInput}
         />
-        <Text variant="headlineSmall" style={styles.headlines}>Password</Text>
+        <Text variant="headlineSmall" style={styles.headlines}>
+          Password
+        </Text>
         <TextInput
           label="Password"
           secureTextEntry={true}
@@ -87,8 +103,15 @@ const Register = ({navigation}) => {
           style={styles.textInput}
         />
 
-        <ContainerButton navigation={navigation} username={username} firstName={firstName} lastName={lastName} email={email} password={password} confirmPassword={confirmPassword}/>
-
+        <ContainerButton
+          navigation={navigation}
+          username={username}
+          firstName={firstName}
+          lastName={lastName}
+          email={email}
+          password={password}
+          confirmPassword={confirmPassword}
+        />
       </View>
     </ScrollView>
   );
@@ -102,12 +125,12 @@ const styles = StyleSheet.create({
     padding: 50,
     alignItems: 'center',
   },
-  logo : {
+  logo: {
     width: 224,
     height: 224,
-    marginBottom: 30
+    marginBottom: 30,
   },
-  containerButton : {
+  containerButton: {
     marginTop: 50,
   },
   button: {
@@ -115,14 +138,14 @@ const styles = StyleSheet.create({
   },
   buttonFont: {
     color: 'white',
-    fontSize: 20
+    fontSize: 20,
   },
   headlines: {
     marginBottom: 10,
   },
   textInput: {
-    marginBottom: 10
-  }
+    marginBottom: 10,
+  },
 });
 
 Register.propTypes = {
@@ -135,13 +158,12 @@ ContainerButton.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
-  username : PropTypes.string.isRequired,
-  firstName : PropTypes.string.isRequired,
-  lastName : PropTypes.string.isRequired,
-  email : PropTypes.string.isRequired,
-  password : PropTypes.string.isRequired,
-  confirmPassword : PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  firstName: PropTypes.string.isRequired,
+  lastName: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
+  confirmPassword: PropTypes.string.isRequired,
 };
-
 
 export default Register;

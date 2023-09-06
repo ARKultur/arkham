@@ -1,10 +1,12 @@
 import axios from 'axios';
-import { API_URL } from '../constants/API';
+import {API_URL} from '../constants/API';
 
-const getUser = async (email, token, thunkAPI) => {
+const getUser = async (email, token) => {
   const URL = API_URL + `/api/customers/?email=${email}`;
   const params = {
-    headers : {'Authorization': 'Bearer ' + token},
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
   };
 
   try {
@@ -12,26 +14,19 @@ const getUser = async (email, token, thunkAPI) => {
     return response.data;
   } catch (error) {
     console.log(error.response.data);
-    thunkAPI.rejectWithValue(error.response.data);
     throw error.response.data;
   }
 };
 
-const editUser = async (id, body) => {
+const editUser = async (body, token) => {
   try {
-    const response = await axios.post(API_URL + `/customer/${id}`,
-      {
-        auth: {
-          email: body.email.toLowerCase(),
-          first_name: body.first_name,
-          last_name: body.last_name,
-          password: body.password,
-        },
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + body.token,
-        }
-      });
+    console.log('--->', body);
+    const response = await axios.patch(API_URL + '/api/customers', body, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    });
 
     return response.data;
   } catch (error) {
@@ -42,7 +37,7 @@ const editUser = async (id, body) => {
 
 const UserServices = {
   getUser,
-  editUser
+  editUser,
 };
 
 export default UserServices;

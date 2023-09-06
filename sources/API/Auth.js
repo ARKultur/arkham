@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from '../constants/API';
+import {API_URL} from '../constants/API';
 import UserServices from './User';
 
 const register = async (body, thunkAPI) => {
@@ -26,7 +26,7 @@ const login = async (email, password, thunkAPI) => {
   try {
     const response = await axios.post(URL, jsonBody);
     const userData = await UserServices.getUser(email, response.data);
-    //userData.accessToken = response.data;
+    userData.accessToken = response.data;
 
     return userData;
   } catch (error) {
