@@ -213,9 +213,17 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
     earthAnchor =
 earth.createAnchor(latLng.latitude, latLng.longitude, altitude, qx, qy, qz, qw)
 
-    activity.view.mapView?.earthMarker?.apply {
-      position = latLng
-      isVisible = true
+    anchors.add(earth.createAnchor(48.797205, 2.432045, 78.7, qx, qy, qz, qw))
+    anchors.add(earth.createAnchor(48.797185, 2.432045, 78.7, qx, qy, qz, qw))
+    activity.view.mapView?.earthMarkers?.add(activity.view.mapView
+        ?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int))
+
+    var i = 0
+    for (anchor in anchors) {
+        activity.view.mapView?.earthMarkers?.get(i)?.apply {
+            position = LatLng(48.797205, 2.432045)
+            isVisible = true
+        }
     }
   }
 
