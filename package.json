@@ -42,7 +42,6 @@
     "react-native-screens": "^3.18.1",
     "react-native-swiper": "^1.6.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-vision-camera": "^2.15.4",
     "react-redux": "^8.0.4",
     "redux": "^4.2.0",
     "ts-jest": "^29.0.3"

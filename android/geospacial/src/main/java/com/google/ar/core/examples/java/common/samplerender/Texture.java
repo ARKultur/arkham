@@ -134,6 +134,23 @@ public class Texture implements Closeable {
 
       // Load and convert the bitmap and copy its contents to a direct ByteBuffer. Despite its name,
       // the ARGB_8888 config is actually stored in RGBA order.
+
+      //  var inputStream: InputStream? = null
+      //      try {
+      //          val url = URL(imageUrl)
+      //              val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+      //              connection.connect()
+
+      //              if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+      //                  inputStream = BufferedInputStream(connection.inputStream)
+      //                      bitmap = BitmapFactory.decodeStream(inputStream)
+      //              }
+      //      } catch (e: IOException) {
+      //          e.printStackTrace()
+      //      } finally {
+      //          inputStream?.close()
+      //      }
+
       bitmap =
           convertBitmapToConfig(
               BitmapFactory.decodeStream(render.getAssets().open(assetFileName)),
