@@ -215,8 +215,8 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
     val qz = 0f
     val qw = 1f
 
-    anchors.add(earth.createAnchor(48.797205, 2.432045, 78.7, qx, qy, qz, qw))
-    anchors.add(earth.createAnchor(48.797185, 2.432045, 78.7, qx, qy, qz, qw))
+    anchors.add(earth.createAnchor(45.74636, 4.83525, 172, qx, qy, qz, qw))
+    anchors.add(earth.createAnchor(45.746067, 4.835052, 172, qx, qy, qz, qw))
     activity.view.mapView?.earthMarkers?.add(activity.view.mapView
         ?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int))
 
