@@ -64,23 +64,6 @@ const FilterModal = ({isOpenModal, setIsOpenModal}) => {
     }
   }, [userInput]);
 
-  // useEffect(() => {
-  //   if (userInput.length > 0) {
-  //     const userMarkers = [...markers];
-
-  //     const includesUserInput = userMarkers.some(marker =>
-  //       marker.includes(userInput),
-  //     );
-  //     if (includesUserInput) {
-  //       setFilter(userMarkers);
-  //     } else {
-  //       setFilter(markers);
-  //     }
-  //   } else {
-  //     setFilter(markers);
-  //   }
-  // }, [userInput]);
-
   return (
     <Modal
       animationType="slide"
