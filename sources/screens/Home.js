@@ -12,6 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {filter_markers, get_markers} from '../reducers/Actions/markerAction';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {getSuggestedPlace} from '../API/Suggestions';
 
 const FilterItem = ({marker, key}) => {
   const [checked, setChecked] = useState(false);
@@ -146,13 +147,20 @@ FilterModal.propTypes = {
   setIsOpenModal: PropTypes.func.isRequired,
 };
 
-const Home = () => {
+const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const state = useSelector(state => state.markerReducer);
   const [userInput, setUserInput] = useState('');
   const [userFilter, setUserFilter] = useState('');
   const [makersIsSetup, setMarkerIsSetup] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [suggestedPlaces, setSuggestedPlaces] = useState([]);
+
+  const getData = async () => {
+    const data = await getSuggestedPlace();
+
+    setSuggestedPlaces(data);
+  };
 
   useEffect(() => {
     if (state.markers.length == 0 && !makersIsSetup) {
@@ -160,6 +168,20 @@ const Home = () => {
       setMarkerIsSetup(true);
     }
   }, [state, makersIsSetup]);
+
+  useEffect(() => {
+    const subscribe = navigation.addListener(
+      'focus',
+      () => {
+        getData();
+      },
+      [],
+    );
+
+    return subscribe;
+  }, []);
+
+  console.log(JSON.stringify(suggestedPlaces, 0, 2));
 
   return (
     <View style={styles.MapContainer}>
@@ -210,11 +232,30 @@ const Home = () => {
               />
             );
           })}
+        {suggestedPlaces &&
+          suggestedPlaces[0] &&
+          suggestedPlaces.map((place, index) => {
+            return (
+              <Marker
+                key={index}
+                coordinate={{
+                  latitude: place.geometry.location.lat,
+                  longitude: place.geometry.location.lng,
+                }}
+                title={place.name}
+                description={place.vicinity}
+              />
+            );
+          })}
       </MapView>
 
       <FilterModal isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
     </View>
   );
+};
+
+Home.propTypes = {
+  navigation: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
