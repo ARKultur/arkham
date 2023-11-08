@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
+  FlatList,
+  Image,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -14,12 +16,14 @@ import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {getSuggestedPlace} from '../API/Suggestions';
 
-const FilterItem = ({marker, key}) => {
-  const [checked, setChecked] = useState(false);
+const FilterItem = ({marker, filters, setFilters}) => {
+  const [checked, setChecked] = useState(
+    filters.filter(filter => filter.name === marker.name).length > 0,
+  );
 
   return (
     <View
-      key={key}
+      key={marker.name}
       style={{
         flexDirection: 'row',
         alignItems: 'center',
@@ -34,7 +38,17 @@ const FilterItem = ({marker, key}) => {
       <Icon name="map-marker" size={20} />
       <Text>{marker.name}</Text>
       <Checkbox
-        onPress={() => setChecked(!checked)}
+        onPress={() => {
+          if (!checked) {
+            setFilters([...filters, marker]);
+          } else {
+            const newFilters = filters.filter(
+              filter => filter.name !== marker.name,
+            );
+            setFilters(newFilters);
+          }
+          setChecked(!checked);
+        }}
         status={checked ? 'checked' : ''}
       />
     </View>
@@ -42,13 +56,14 @@ const FilterItem = ({marker, key}) => {
 };
 
 FilterItem.propTypes = {
-  key: PropTypes.number.isRequired,
   marker: PropTypes.object.isRequired,
+  filters: PropTypes.array.isRequired,
+  setFilters: PropTypes.func.isRequired,
 };
 
-const FilterModal = ({isOpenModal, setIsOpenModal}) => {
+const FilterModal = ({isOpenModal, setIsOpenModal, setMarkers}) => {
   const {markers} = useSelector(state => state.markerReducer);
-  const [filters, setFilters] = useState((markers && markers) || []);
+  const [filters, setFilters] = useState([...markers] || []);
   const [userInput, setUserInput] = useState('');
 
   useEffect(() => {
@@ -64,6 +79,10 @@ const FilterModal = ({isOpenModal, setIsOpenModal}) => {
       setFilters(markers);
     }
   }, [userInput]);
+
+  useEffect(() => {
+    setMarkers(filters);
+  }, [filters]);
 
   return (
     <Modal
@@ -125,17 +144,21 @@ const FilterModal = ({isOpenModal, setIsOpenModal}) => {
               />
             </TouchableOpacity>
           </View>
-          <ScrollView
+          <FlatList
             style={{
               height: 200,
               marginTop: 20,
-            }}>
-            {filters &&
-              filters[0] &&
-              filters.map((marker, index) => (
-                <FilterItem marker={marker} key={index} />
-              ))}
-          </ScrollView>
+            }}
+            data={markers}
+            renderItem={({item}) => (
+              <FilterItem
+                marker={item}
+                filters={filters}
+                setFilters={setFilters}
+              />
+            )}
+            keyExtractor={item => item.name}
+          />
         </View>
       </View>
     </Modal>
@@ -145,6 +168,7 @@ const FilterModal = ({isOpenModal, setIsOpenModal}) => {
 FilterModal.propTypes = {
   isOpenModal: PropTypes.bool.isRequired,
   setIsOpenModal: PropTypes.func.isRequired,
+  setMarkers: PropTypes.func.isRequired,
 };
 
 const Home = ({navigation}) => {
@@ -155,6 +179,7 @@ const Home = ({navigation}) => {
   const [makersIsSetup, setMarkerIsSetup] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [suggestedPlaces, setSuggestedPlaces] = useState([]);
+  const [markers, setMarkers] = useState((state && state.markers) || []);
 
   const getData = async () => {
     const data = await getSuggestedPlace();
@@ -181,10 +206,23 @@ const Home = ({navigation}) => {
     return subscribe;
   }, []);
 
-  console.log(JSON.stringify(suggestedPlaces, 0, 2));
-
   return (
     <View style={styles.MapContainer}>
+      <Image
+        source={require('../images/logo.png')}
+        style={{
+          width: 50,
+          height: 50,
+          top: 0,
+          left: 0,
+          zIndex: 100,
+          margin: 10,
+          alignSelf: 'center',
+        }}
+      />
+      <Text style={{alignSelf: 'center', fontSize: 20, fontWeight: 'bold'}}>
+        ARKultur
+      </Text>
       <View style={styles.FilterPart}>
         <TextInput
           placeholder="Search..."
@@ -218,8 +256,8 @@ const Home = ({navigation}) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
-        {state.markers.length !== 0 &&
-          state.markers.map((marker, index) => {
+        {markers.length !== 0 &&
+          markers.map((marker, index) => {
             return (
               <Marker
                 key={index}
@@ -244,12 +282,17 @@ const Home = ({navigation}) => {
                 }}
                 title={place.name}
                 description={place.vicinity}
+                image={place.icon}
               />
             );
           })}
       </MapView>
 
-      <FilterModal isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
+      <FilterModal
+        isOpenModal={isOpenModal}
+        setIsOpenModal={setIsOpenModal}
+        setMarkers={setMarkers}
+      />
     </View>
   );
 };
@@ -260,20 +303,17 @@ Home.propTypes = {
 
 const styles = StyleSheet.create({
   FilterPart: {
-    flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     flexDirection: 'row',
+    padding: 10,
+    paddingHorizontal: 25,
   },
   MapContainer: {
-    flex: 8,
+    flex: 1,
   },
   mapStyle: {
-    position: 'absolute',
-    top: 50,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
   },
 
   input: {
@@ -283,6 +323,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     borderWidth: 1,
     padding: 10,
+    flex: 1,
   },
   map: {
     flex: 1,
