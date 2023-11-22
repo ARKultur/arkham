@@ -37,3 +37,32 @@ export const addSuggestionToUser = async body => {
     console.log(error.response.data);
   }
 };
+
+export const getSuggestionMarkers = async token => {
+  try {
+    const URL = API_URL + '/api/suggestion/map';
+    const params = {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    };
+
+    const response = await axios.get(URL, params);
+    return response.data && response.data.results;
+  } catch (error) {
+    console.log(error.response.data);
+  }
+};
+
+export const getSuggestedPlace = async () => {
+  const URL =
+    'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=45.764042,4.835659&radius=5000&type=museum&key=';
+
+  try {
+    const response = await axios.get(URL);
+
+    return response.data && response.data.results;
+  } catch (error) {
+    console.log(error.response.data);
+  }
+};
