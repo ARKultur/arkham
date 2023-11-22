@@ -41,7 +41,7 @@ class MapView(val activity: HelloGeoActivity, val googleMap: GoogleMap) {
   val cameraMarker = createMarker(CAMERA_MARKER_COLOR)
   var cameraIdle = true
 
-  var earthMarkers: MutableList<Marker?> = mutableListOf<Marker?>()
+  var earthMarkers: MutableList<Marker?> = ArrayList(2);
 
   init {
     googleMap.uiSettings.apply {
