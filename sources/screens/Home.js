@@ -71,7 +71,7 @@ const FilterModal = ({isOpenModal, setIsOpenModal, setMarkers}) => {
       const userMarkers = [...markers];
 
       const newFilters = userMarkers.filter(marker =>
-        marker.name.includes(userInput),
+        marker.name.toLowerCase().includes(userInput.toLowerCase()),
       );
 
       setFilters(newFilters);
@@ -149,7 +149,7 @@ const FilterModal = ({isOpenModal, setIsOpenModal, setMarkers}) => {
               height: 200,
               marginTop: 20,
             }}
-            data={markers}
+            data={filters}
             renderItem={({item}) => (
               <FilterItem
                 marker={item}
@@ -334,14 +334,6 @@ const styles = StyleSheet.create({
 
 const config = [
   {
-    elementType: 'geometry',
-    stylers: [
-      {
-        color: '#f5f5f5',
-      },
-    ],
-  },
-  {
     elementType: 'labels.text.fill',
     stylers: [
       {
@@ -450,86 +442,6 @@ const config = [
     stylers: [
       {
         visibility: 'off',
-      },
-    ],
-  },
-  {
-    featureType: 'road.arterial',
-    elementType: 'labels.text.fill',
-    stylers: [
-      {
-        color: '#757575',
-      },
-    ],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'geometry',
-    stylers: [
-      {
-        color: '#dadada',
-      },
-    ],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'labels.text.fill',
-    stylers: [
-      {
-        color: '#616161',
-      },
-    ],
-  },
-  {
-    featureType: 'road.local',
-    elementType: 'labels.text.fill',
-    stylers: [
-      {
-        color: '#9e9e9e',
-      },
-    ],
-  },
-  // {
-  //   'featureType': 'transit',
-  //   'stylers': [
-  //     {
-  //       'visibility': 'off'
-  //     }
-  //   ]
-  // },
-  {
-    featureType: 'transit.line',
-    elementType: 'geometry',
-    stylers: [
-      {
-        color: '#e5e5e5',
-      },
-    ],
-  },
-  {
-    featureType: 'transit.station',
-    elementType: 'geometry',
-    stylers: [
-      {
-        color: '#eeeeee',
-      },
-    ],
-  },
-  {
-    featureType: 'water',
-    elementType: 'geometry',
-    stylers: [
-      {
-        color: '#c9c9c9',
-      },
-    ],
-  },
-  {
-    featureType: 'water',
-    elementType: 'labels.text.fill',
-    stylers: [
-      {
-        color: '#9e9e9e',
       },
     ],
   },

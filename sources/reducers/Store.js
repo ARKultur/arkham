@@ -1,15 +1,42 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import {combineReducers, configureStore} from '@reduxjs/toolkit';
 import userReducer from './userReducer';
-import markerReducer from './markerReducer'
+import markerReducer from './markerReducer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  whitelist: ['userReducer', 'orientationReducer'],
+};
 
 const rootReducer = combineReducers({
   userReducer,
-  markerReducer
+  markerReducer,
 });
 
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const Store = configureStore({
-  reducer: rootReducer
+const store = configureStore({
+  reducer: persistedReducer,
+  devTools: process.env.NODE_ENV !== 'production',
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
-export default Store;
+const persistor = persistStore(store);
+
+export {store, persistor};
