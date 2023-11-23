@@ -94,11 +94,11 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
 
       // Virtual object to render (Geospatial Marker)
 
-      virtualObjectTextures.add(Texture.createFromAsset(render, "models/wolf/textures/Wolf_Body.jpg", Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB))
-      virtualObjectTextures.add(Texture.createFromAsset(render, "models/spatial_marker_baked.png", Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB))
+      virtualObjectTextures.add(Texture.createFromAsset(render, "models/cube/uv_texture.png", Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB))
+      virtualObjectTextures.add(Texture.createFromAsset(render, "models/triomphe/arc.jpg", Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB))
 
-      virtualObjectMeshs.add(Mesh.createFromAsset(render, "models/wolf/Wolf_One_obj.obj"))
-      virtualObjectMeshs.add(Mesh.createFromAsset(render, "models/geospatial_marker.obj"))
+      virtualObjectMeshs.add(Mesh.createFromAsset(render, "models/cube/cube.obj"))
+      virtualObjectMeshs.add(Mesh.createFromAsset(render, "models/triomphe/arc.obj"))
 
       virtualObjectShaders.add(Shader.createFromAssets(render, "shaders/ar_unlit_object.vert", "shaders/ar_unlit_object.frag",/*defines=*/ null).setTexture("u_Texture", virtualObjectTextures.get(0)))
       virtualObjectShaders.add(Shader.createFromAssets(render, "shaders/ar_unlit_object.vert", "shaders/ar_unlit_object.frag",/*defines=*/ null).setTexture("u_Texture", virtualObjectTextures.get(1)))
@@ -215,17 +215,29 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
     val qz = 0f
     val qw = 1f
 
-    anchors.add(earth.createAnchor(45.74636, 4.83525, 172.0, qx, qy, qz, qw))
-    anchors.add(earth.createAnchor(45.746067, 4.835052, 172.0, qx, qy, qz, qw))
+    anchors.add(earth.createAnchor(48.797235, 2.432045, 78.7, qx, qy, qz, qw))
+    anchors.add(earth.createAnchor(48.797200, 2.432045, 75.7, qx, qy, qz, qw))
+    activity.view.mapView?.earthMarkers?.add(activity.view.mapView
+        ?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int))
     activity.view.mapView?.earthMarkers?.add(activity.view.mapView
         ?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int))
 
+
     var i = 0
     for (anchor in anchors) {
-        activity.view.mapView?.earthMarkers?.get(i)?.apply {
-            position = LatLng(48.797205, 2.432045)
-            isVisible = true
+        if (i == 0) {
+            activity.view.mapView?.earthMarkers?.get(i)?.apply {
+                position = LatLng(48.797205, 2.432045)
+                    isVisible = true
+            }
         }
+        else {
+            activity.view.mapView?.earthMarkers?.get(i)?.apply {
+                position = LatLng(48.797203, 2.432045)
+                    isVisible = true
+            }
+        }
+        i++;
     }
   }
 
