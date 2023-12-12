@@ -178,9 +178,10 @@ const Home = ({navigation}) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [suggestedPlaces, setSuggestedPlaces] = useState([]);
   const [markers, setMarkers] = useState((state && state.markers) || []);
+  const {user} = useSelector(state => state.userReducer);
 
   const getData = async () => {
-    const data = await getSuggestedPlace();
+    const data = await getSuggestedPlace(user.token);
 
     setSuggestedPlaces(data);
   };
