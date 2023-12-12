@@ -9,6 +9,7 @@ import {
 
 const initialState = {
   isLoggedIn: false,
+  hasSelectedSuggestions: false,
   user: {},
 };
 
@@ -16,32 +17,33 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {},
-  extraReducers: {
-    [register.fulfilled]: state => {
-      state.isLoggedIn = false;
-    },
-    [register.rejected]: state => {
-      state.isLoggedIn = false;
-    },
-    [login.fulfilled]: (state, action) => {
-      state.isLoggedIn = true;
-      state.user = action.payload;
-      console.log(state);
-    },
-    [login.rejected]: state => {
-      state.isLoggedIn = false;
-      state.user = {};
-    },
-    [logout.fulfilled]: state => {
-      state.isLoggedIn = false;
-      state.user = {};
-    },
-    [editUser.fulfilled]: (state, action) => {
-      state.user = action.payload;
-    },
-    [editSuggestions.fulfilled]: (state, action) => {
-      state.user = {...state.user, likedSuggestions: action.payload};
-    },
+  extraReducers: builder => {
+    builder
+      .addCase(register.fulfilled, state => {
+        state.isLoggedIn = false;
+      })
+      .addCase(register.rejected, state => {
+        state.isLoggedIn = false;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.isLoggedIn = true;
+        state.user = action.payload;
+      })
+      .addCase(login.rejected, state => {
+        state.isLoggedIn = false;
+        state.user = null;
+      })
+      .addCase(logout.fulfilled, state => {
+        state.isLoggedIn = false;
+        state.user = {};
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(editSuggestions.fulfilled, (state, action) => {
+        state.user = {...state.user, likedSuggestions: action.payload};
+        state.hasSelectedSuggestions = true;
+      });
   },
 });
 

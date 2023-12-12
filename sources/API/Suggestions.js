@@ -56,7 +56,7 @@ export const getSuggestionMarkers = async token => {
 
 export const getSuggestedPlace = async () => {
   const URL =
-    'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=45.764042,4.835659&radius=5000&type=museum&key=';
+    'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=45.764042,4.835659&radius=5000&type=museum&keyword=-store&key=AIzaSyBB9crVlqjPM-GGyqtuh7wGyMg9Q0kEZ3o';
 
   try {
     const response = await axios.get(URL);

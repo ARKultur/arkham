@@ -19,6 +19,7 @@ import Register from './sources/screens/Register';
 import ResetPassword from './sources/screens/ResetPassword';
 import Settings from './sources/screens/Settings';
 import Suggestions from './sources/screens/Suggestions';
+import {StatusBar} from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -83,14 +84,18 @@ const BottomNavigation = () => {
 };
 
 const Navigation = () => {
-  const {isLoggedIn} = useSelector(state => state.userReducer);
+  const {isLoggedIn, hasSelectedSuggestions} = useSelector(
+    state => state.userReducer,
+  );
 
   return (
     <NavigationContainer theme={theme}>
       <Stack.Navigator screenOptions={{header: Appbar, animation: 'none'}}>
         {(isLoggedIn && (
           <Stack.Group>
-            <Stack.Screen name="Suggestions" component={Suggestions} />
+            {!hasSelectedSuggestions && (
+              <Stack.Screen name="Suggestions" component={Suggestions} />
+            )}
             <Stack.Screen
               name="Tab"
               component={BottomNavigation}
@@ -134,6 +139,12 @@ const App = () => {
     <StoreProvider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <PaperProvider theme={theme}>
+          <StatusBar
+            animated={true}
+            backgroundColor="white"
+            barStyle={'dark-content'}
+            showHideTransition={'fade'}
+          />
           <Navigation />
         </PaperProvider>
       </PersistGate>

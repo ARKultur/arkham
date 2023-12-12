@@ -163,15 +163,25 @@ const Item = ({suggestion, selected, handleSelected}) => {
 
 const Suggestions = ({navigation}) => {
   const [suggestions, setSuggestions] = React.useState([]);
-  const {user} = useSelector(state => state.userReducer);
+  const {user, hasSelectedSuggestions} = useSelector(
+    state => state.userReducer,
+  );
   const [selected, setSelected] = React.useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const getData = async () => {
-      const suggestions = await getSuggestions(user.token);
+      try {
+        const suggestions = await getSuggestions(user.token);
 
-      setSuggestions(suggestions);
+        if (suggestions && suggestions.length > 0) {
+          setSuggestions(suggestions);
+        } else {
+          navigation.navigate('Tab');
+        }
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     getData();
@@ -185,13 +195,13 @@ const Suggestions = ({navigation}) => {
     }
   };
 
-  if (suggestions.length === 0) {
-    navigation.navigate('Tab');
-  }
-
   const handleSubmit = async () => {
+    if (hasSelectedSuggestions) {
+      navigation.navigate('Tab', {screen: 'Profile'});
+    } else {
+      navigation.navigate('Tab');
+    }
     await dispatch(editSuggestions(selected));
-    navigation.navigate('Tab', {screen: 'Profile'});
   };
 
   return (

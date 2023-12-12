@@ -1,8 +1,8 @@
+import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
-  ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -10,11 +10,10 @@ import {
 } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import {Button, Checkbox, Modal, Text} from 'react-native-paper';
-import {useDispatch, useSelector} from 'react-redux';
-import {filter_markers, get_markers} from '../reducers/Actions/markerAction';
-import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useDispatch, useSelector} from 'react-redux';
 import {getSuggestedPlace} from '../API/Suggestions';
+import {filter_markers, get_markers} from '../reducers/Actions/markerAction';
 
 const FilterItem = ({marker, filters, setFilters}) => {
   const [checked, setChecked] = useState(
@@ -175,7 +174,6 @@ const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const state = useSelector(state => state.markerReducer);
   const [userInput, setUserInput] = useState('');
-  const [userFilter, setUserFilter] = useState('');
   const [makersIsSetup, setMarkerIsSetup] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [suggestedPlaces, setSuggestedPlaces] = useState([]);
@@ -232,7 +230,7 @@ const Home = ({navigation}) => {
         />
         <Button
           icon="magnify"
-          onPress={() => dispatch(filter_markers({userInput, userFilter}))}
+          onPress={() => dispatch(filter_markers({userInput, markers}))}
           style={styles.searchButton}
         />
 
