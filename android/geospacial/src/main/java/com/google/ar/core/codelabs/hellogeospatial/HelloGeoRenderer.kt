@@ -34,17 +34,16 @@ import com.google.ar.core.exceptions.CameraNotAvailableException
 import com.google.ar.core.codelabs.hellogeospatial.AnchorData
 import java.io.IOException
 import com.google.android.gms.maps.model.Marker
+import kotlin.collections.mutableListOf
+import com.google.ar.core.codelabs.hellogeospatial.helpers.MapView
 
 data class AnchorData(
     val anchor: Anchor?,
-    val texture: Texture?,
-    val mesh: Mesh?,
-    val shader: Shader?
+    val meshName: String?,
+    val textureName: String?
 )
 
-class HelloGeoRenderer(val activity: HelloGeoActivity) :
-  SampleRender.Renderer, DefaultLifecycleObserver {
-  //<editor-fold desc="ARCore initialization" defaultstate="collapsed">
+class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: MutableList<AnchorJsonData>) : SampleRender.Renderer, DefaultLifecycleObserver {
   companion object {
     val TAG = "HelloGeoRenderer"
 
@@ -57,17 +56,16 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
   var hasSetTextureNames = false
 
   // Virtual object (ARCore pawn)
-   var virtualObjectMeshs: MutableList<Mesh> = mutableListOf<Mesh>()
-   var virtualObjectShaders: MutableList<Shader> = mutableListOf<Shader>()
-   var virtualObjectTextures: MutableList<Texture> = mutableListOf<Texture>()
-  var anchors: MutableList<Anchor> = mutableListOf<Anchor>()
+  var virtualObjectMeshs: MutableList<Mesh> = mutableListOf<Mesh>()
+  var virtualObjectShaders: MutableList<Shader> = mutableListOf<Shader>()
+  var virtualObjectTextures: MutableList<Texture> = mutableListOf<Texture>()
+
 
   // Temporary matrix allocated here to reduce number of allocations for each frame.
   val modelMatrix = FloatArray(16)
   val viewMatrix = FloatArray(16)
   val projectionMatrix = FloatArray(16)
   val modelViewMatrix = FloatArray(16) // view x model
-
   val modelViewProjectionMatrix = FloatArray(16) // projection x view x model
 
   val session
@@ -75,6 +73,11 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
 
   val displayRotationHelper = DisplayRotationHelper(activity)
   val trackingStateHelper = TrackingStateHelper(activity)
+  var anchors: MutableList<AnchorData> = mutableListOf<AnchorData>()
+
+  init {
+    onMapClick()
+  }
 
   override fun onResume(owner: LifecycleOwner) {
     displayRotationHelper.onResume()
@@ -88,26 +91,24 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
   override fun onSurfaceCreated(render: SampleRender) {
     // Prepare the rendering objects.
     // This involves reading shaders and 3D model files, so may throw an IOException.
+    Log.i("NTMA", "creating surface")
     try {
       backgroundRenderer = BackgroundRenderer(render)
       virtualSceneFramebuffer = Framebuffer(render, /*width=*/ 1, /*height=*/ 1)
 
-      // Virtual object to render (Geospatial Marker)
+       //Virtual object to render (Geospatial Marker)
 
-      virtualObjectTextures.add(Texture.createFromAsset(render, "models/cube/uv_texture.png", Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB))
-      virtualObjectTextures.add(Texture.createFromAsset(render, "models/triomphe/arc.jpg", Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB))
-
-      virtualObjectMeshs.add(Mesh.createFromAsset(render, "models/cube/cube.obj"))
-      virtualObjectMeshs.add(Mesh.createFromAsset(render, "models/triomphe/arc.obj"))
-
-      virtualObjectShaders.add(Shader.createFromAssets(render, "shaders/ar_unlit_object.vert", "shaders/ar_unlit_object.frag",/*defines=*/ null).setTexture("u_Texture", virtualObjectTextures.get(0)))
-      virtualObjectShaders.add(Shader.createFromAssets(render, "shaders/ar_unlit_object.vert", "shaders/ar_unlit_object.frag",/*defines=*/ null).setTexture("u_Texture", virtualObjectTextures.get(1)))
+      for (anchor in anchorsArray) {
+        val texture = Texture.createFromAsset(render, anchor.textureName, Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB)
+        virtualObjectMeshs.add(Mesh.createFromAsset(render, anchor.meshName))
+        virtualObjectTextures.add(texture)
+        virtualObjectShaders.add(Shader.createFromAssets(render, "shaders/ar_unlit_object.vert", "shaders/ar_unlit_object.frag",/*defines=*/ null).setTexture("u_Texture", texture))
+      }
 
       backgroundRenderer.setUseDepthVisualization(render, false)
       backgroundRenderer.setUseOcclusion(render, false)
-    } catch (e: IOException) {
-      Log.e(TAG, "Failed to read a required asset file", e)
-      showError("Failed to read a required asset file: $e")
+    } catch (e: Throwable) {
+      Log.e("NTMA2", e.toString())
     }
   }
 
@@ -115,12 +116,9 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
     displayRotationHelper.onSurfaceChanged(width, height)
     virtualSceneFramebuffer.resize(width, height)
   }
-  //</editor-fold>
 
   override fun onDrawFrame(render: SampleRender) {
     val session = session ?: return
-
-    //<editor-fold desc="ARCore frame boilerplate" defaultstate="collapsed">
     // Texture names should only be set once on a GL thread unless they change. This is done during
     // onDrawFrame rather than onSurfaceCreated since the session is not guaranteed to have been
     // initialized during the execution of onSurfaceCreated.
@@ -175,7 +173,6 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
     camera.getViewMatrix(viewMatrix, 0)
 
     render.clear(virtualSceneFramebuffer, 0f, 0f, 0f, 0f)
-    //</editor-fold>
 
     val earth = session.earth
     if (earth?.trackingState == TrackingState.TRACKING) {
@@ -188,81 +185,63 @@ class HelloGeoRenderer(val activity: HelloGeoActivity) :
     }
 
     // Draw the placed anchor, if it exists.
-    for (anchor in anchors)
-      anchor?.let {
-        render.renderCompassAtAnchor(it)
-      }
+    render.renderCompassAtAnchor()
 
     // Compose the virtual scene with the background.
     backgroundRenderer.drawVirtualScene(render, virtualSceneFramebuffer, Z_NEAR, Z_FAR)
   }
 
-  fun onMapClick(latLng: LatLng) {
-    val earth = session?.earth ?: return
-    if (earth.trackingState != TrackingState.TRACKING) {
-      return
-    }
-    anchors.clear()
-
+  fun onMapClick() {
     for (anchor in anchors)
-        anchor.detach()
-
-    // Place the earth anchor at the same altitude as that of the camera to make it easier to view.
-// The rotation quaternion of the anchor in the
-// East-Up-South (EUS) coordinate system.
-    val qx = 0f
-    val qy = 0f
-    val qz = 0f
-    val qw = 1f
-
-    anchors.add(earth.createAnchor(48.797235, 2.432045, 78.7, qx, qy, qz, qw))
-    anchors.add(earth.createAnchor(48.797200, 2.432045, 75.7, qx, qy, qz, qw))
-    activity.view.mapView?.earthMarkers?.add(activity.view.mapView
-        ?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int))
-    activity.view.mapView?.earthMarkers?.add(activity.view.mapView
-        ?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int))
-
-
-    var i = 0
-    for (anchor in anchors) {
-        if (i == 0) {
-            activity.view.mapView?.earthMarkers?.get(i)?.apply {
-                position = LatLng(48.797205, 2.432045)
-                    isVisible = true
-            }
-        }
-        else {
-            activity.view.mapView?.earthMarkers?.get(i)?.apply {
-                position = LatLng(48.797203, 2.432045)
-                    isVisible = true
-            }
-        }
-        i++;
-    }
+        anchor.anchor?.detach()
+    anchors.clear()
+    InitAnchorAnchors(anchorsArray)
   }
 
-  private fun SampleRender.renderCompassAtAnchor(anchor: Anchor) {
+  private fun InitAnchorAnchors(data: MutableList<AnchorJsonData>) {
+    val earth = session?.earth ?: return
+    val convertedArray: MutableList<AnchorData> = mutableListOf<AnchorData>()
+
+    try {
+        data.forEachIndexed({ index, item ->
+            val newAnchor = earth.createAnchor(item.lng, item.lat, item.alti, 0f, 0f, 0f, 1f)
+            Log.i("NTMA", "Anchor created " + newAnchor.toString() + " " + item.toString())
+            convertedArray.add(AnchorData(
+                newAnchor,
+                item.meshName,
+                item.textureName
+            ));
+            val marker = activity.view.mapView?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int)
+            activity.view.mapView?.earthMarkers?.add(marker);
+            activity.view.mapView?.earthMarkers?.get(index)?.apply {
+                position = LatLng(item.lat, item.lng)
+                    isVisible = true
+            };
+        })
+    } catch (e: Throwable) {
+        Log.e("NTMA", e.toString(), e)
+    }
+    anchors = convertedArray;
+  }
+
+  private fun SampleRender.renderCompassAtAnchor() {
     // Get the current pose of the Anchor in world space. The Anchor pose is updated
     // during calls to session.update() as ARCore refines its estimate of the world.
-    anchors.get(0).pose.toMatrix(modelMatrix, 0)
 
-    // Calculate model/view/projection matrices
-    Matrix.multiplyMM(modelViewMatrix, 0, viewMatrix, 0, modelMatrix, 0)
-    Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelViewMatrix, 0)
+    try {
+        anchors.forEachIndexed { index, anchor ->
+            anchor.anchor?.pose?.toMatrix(modelViewMatrix, 0)
+            Matrix.multiplyMM(modelViewMatrix, 0, viewMatrix, 0, modelMatrix, 0)
+            Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelViewMatrix, 0)
+            virtualObjectShaders.get(index).setMat4("u_ModelViewProjection", modelViewProjectionMatrix)
+            Log.e("NTMA", "Draw index " + index.toString() + " mesh " + virtualObjectMeshs.get(index).toString() +
+                " shaders " + virtualObjectShaders.get(index).toString() + " " + modelViewMatrix.contentToString())
 
-    // Update shader properties and draw
-    virtualObjectShaders.get(0).setMat4("u_ModelViewProjection", modelViewProjectionMatrix)
-    draw(virtualObjectMeshs.get(0), virtualObjectShaders.get(0), virtualSceneFramebuffer)
-
-    anchors.get(1).pose.toMatrix(modelMatrix, 0)
-
-    // Calculate model/view/projection matrices
-    Matrix.multiplyMM(modelViewMatrix, 0, viewMatrix, 0, modelMatrix, 0)
-    Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelViewMatrix, 0)
-
-    // Update shader properties and draw
-    virtualObjectShaders.get(1).setMat4("u_ModelViewProjection", modelViewProjectionMatrix)
-    draw(virtualObjectMeshs.get(1), virtualObjectShaders.get(1), virtualSceneFramebuffer)
+            draw(virtualObjectMeshs.get(index), virtualObjectShaders.get(index), virtualSceneFramebuffer)
+        }
+    } catch (e: Throwable) {
+        Log.e("NTMA", e.toString(), e)
+    }
   }
 
   private fun showError(errorMessage: String) =

@@ -43,12 +43,12 @@ class HelloGeoView(val activity: HelloGeoActivity) : DefaultLifecycleObserver {
     setup { screenLocation ->
       val latLng: LatLng =
         mapView?.googleMap?.projection?.fromScreenLocation(screenLocation) ?: return@setup
-      activity.renderer.onMapClick(latLng)
+      activity.renderer.onMapClick()
     }
   }
   val mapFragment =
     (activity.supportFragmentManager.findFragmentById(R.id.map)!! as SupportMapFragment).also {
-      it.getMapAsync { googleMap -> mapView = MapView(activity, googleMap) }
+        it.getMapAsync { googleMap -> onMapInitialized(MapView(activity, googleMap)) }
     }
 
   val statusText = root.findViewById<TextView>(R.id.statusText)
@@ -76,5 +76,9 @@ class HelloGeoView(val activity: HelloGeoActivity) : DefaultLifecycleObserver {
 
   override fun onPause(owner: LifecycleOwner) {
     surfaceView.onPause()
+  }
+  fun onMapInitialized(mapView: MapView) {
+    this.mapView = mapView
+    activity.renderer.onMapClick()
   }
 }

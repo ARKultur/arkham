@@ -32,6 +32,14 @@ import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException
 
+data class AnchorJsonData(
+    val lat: Double,
+    val lng: Double,
+    val alti: Double,
+    val meshName: String,
+    val textureName: String
+)
+
 class HelloGeoActivity : AppCompatActivity() {
   companion object {
     private const val TAG = "HelloGeoActivity"
@@ -64,18 +72,33 @@ class HelloGeoActivity : AppCompatActivity() {
         view.snackbarHelper.showError(this, message)
       }
 
+    var anchorsArray = mutableListOf(
+        AnchorJsonData(48.797235,
+            2.432045,
+            78.7,
+            "models/cube/cube.obj",
+            "models/cube/uv_texture.png"
+        ),
+        AnchorJsonData(48.797200,
+            2.432045,
+            75.7,
+            "models/triomphe/arc.obj",
+            "models/triomphe/arc.jpg"
+        )
+    )
     // Configure session features.
     arCoreSessionHelper.beforeSessionResume = ::configureSession
     lifecycle.addObserver(arCoreSessionHelper)
 
-    // Set up the Hello AR renderer.
-    renderer = HelloGeoRenderer(this)
-    lifecycle.addObserver(renderer)
 
     // Set up Hello AR UI.
     view = HelloGeoView(this)
     lifecycle.addObserver(view)
     setContentView(view.root)
+
+    // Set up the Hello AR renderer.
+    renderer = HelloGeoRenderer(this, anchorsArray)
+    lifecycle.addObserver(renderer)
 
     // Sets up an example renderer using our HelloGeoRenderer.
     SampleRender(view.surfaceView, renderer, assets)

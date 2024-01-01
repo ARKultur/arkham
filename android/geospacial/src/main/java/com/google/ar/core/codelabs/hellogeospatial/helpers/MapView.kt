@@ -41,7 +41,7 @@ class MapView(val activity: HelloGeoActivity, val googleMap: GoogleMap) {
   val cameraMarker = createMarker(CAMERA_MARKER_COLOR)
   var cameraIdle = true
 
-  var earthMarkers: MutableList<Marker?> = ArrayList(2);
+  var earthMarkers: MutableList<Marker?> = mutableListOf<Marker?>();
 
   init {
     googleMap.uiSettings.apply {
@@ -87,10 +87,10 @@ class MapView(val activity: HelloGeoActivity, val googleMap: GoogleMap) {
 
   /** Creates and adds a 2D anchor marker on the 2D map view.  */
   public fun createMarker(
-    color: Int,
+    color: Int
   ): Marker {
     val markersOptions = MarkerOptions()
-      .position(LatLng(0.0,0.0))
+      .position(LatLng(0.0, 0.0))
       .draggable(false)
       .anchor(0.5f, 0.5f)
       .flat(true)
