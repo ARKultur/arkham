@@ -230,7 +230,7 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
 
     try {
         anchors.forEachIndexed { index, anchor ->
-            anchor.anchor?.pose?.toMatrix(modelViewMatrix, 0)
+            anchor.anchor?.pose?.toMatrix(modelMatrix, 0)
             Matrix.multiplyMM(modelViewMatrix, 0, viewMatrix, 0, modelMatrix, 0)
             Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelViewMatrix, 0)
             virtualObjectShaders.get(index).setMat4("u_ModelViewProjection", modelViewProjectionMatrix)

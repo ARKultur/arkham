@@ -82,6 +82,10 @@ public class SampleRender {
     useFramebuffer(framebuffer);
     shader.lowLevelUse();
     mesh.lowLevelDraw();
+    int error = GLES30.glGetError();
+    if (error != GLES30.GL_NO_ERROR) {
+        GLError.maybeThrowGLException("error", "opengl error");
+    }
   }
 
   /**
