@@ -34,16 +34,18 @@ import com.google.ar.core.exceptions.CameraNotAvailableException
 import com.google.ar.core.codelabs.hellogeospatial.AnchorData
 import java.io.IOException
 import com.google.android.gms.maps.model.Marker
-import kotlin.collections.mutableListOf
-import com.google.ar.core.codelabs.hellogeospatial.helpers.MapView
 
 data class AnchorData(
     val anchor: Anchor?,
+    val texture: Texture?,
     val mesh: Mesh?,
-    val shader: Shader?,
+    val shader: Shader?
 )
 
-class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: MutableList<AnchorJsonData>) : SampleRender.Renderer, DefaultLifecycleObserver {
+class HelloGeoRenderer(val activity: HelloGeoActivity,
+    val anchorsArray: MutableList<AnchorJsonData>) :
+  SampleRender.Renderer, DefaultLifecycleObserver {
+  //<editor-fold desc="ARCore initialization" defaultstate="collapsed">
   companion object {
     val TAG = "HelloGeoRenderer"
 
@@ -59,7 +61,7 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
   var virtualObjectMeshs: MutableList<Mesh> = mutableListOf<Mesh>()
   var virtualObjectShaders: MutableList<Shader> = mutableListOf<Shader>()
   var virtualObjectTextures: MutableList<Texture> = mutableListOf<Texture>()
-
+  var anchors: MutableList<Anchor> = mutableListOf<Anchor>()
 
   // Temporary matrix allocated here to reduce number of allocations for each frame.
   val modelMatrix = FloatArray(16)
@@ -73,11 +75,6 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
 
   val displayRotationHelper = DisplayRotationHelper(activity)
   val trackingStateHelper = TrackingStateHelper(activity)
-  var anchors: MutableList<Anchor> = mutableListOf<Anchor>()
-
-  init {
-    onMapClick()
-  }
 
   override fun onResume(owner: LifecycleOwner) {
     displayRotationHelper.onResume()
@@ -91,28 +88,25 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
   override fun onSurfaceCreated(render: SampleRender) {
     // Prepare the rendering objects.
     // This involves reading shaders and 3D model files, so may throw an IOException.
-    Log.i("NTMA", "creating surface")
     try {
       backgroundRenderer = BackgroundRenderer(render)
       virtualSceneFramebuffer = Framebuffer(render, /*width=*/ 1, /*height=*/ 1)
 
-       //Virtual object to render (Geospatial Marker)
+      // Virtual object to render (Geospatial Marker)
 
-      for (anchor in anchorsArray) {
-        val texture = Texture.createFromAsset(render, anchor.textureName, Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB)
-        virtualObjectMeshs.add(Mesh.createFromAsset(render, anchor.meshName))
-        virtualObjectTextures.add(texture)
-        virtualObjectShaders.add(Shader.createFromAssets(
-            render,
-            "shaders/ar_unlit_object.vert",
-            "shaders/ar_unlit_object.frag",/*defines=*/ null
-        ).setTexture("u_Texture", virtualObjectTextures.get(virtualObjectTextures.size - 1)))
+      var i = 0
+      while (i < anchorsArray.size) {
+          virtualObjectTextures.add(Texture.createFromAsset(render, anchorsArray.get(i).textureName, Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB))
+          virtualObjectMeshs.add(Mesh.createFromAsset(render, anchorsArray.get(i).meshName))
+          virtualObjectShaders.add(Shader.createFromAssets(render, "shaders/ar_unlit_object.vert", "shaders/ar_unlit_object.frag",/*defines=*/ null).setTexture("u_Texture", virtualObjectTextures.get(i)))
+          i++
       }
 
       backgroundRenderer.setUseDepthVisualization(render, false)
       backgroundRenderer.setUseOcclusion(render, false)
-    } catch (e: Throwable) {
-      Log.e("NTMA2", e.toString())
+    } catch (e: IOException) {
+      Log.e(TAG, "Failed to read a required asset file", e)
+      showError("Failed to read a required asset file: $e")
     }
   }
 
@@ -120,9 +114,12 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
     displayRotationHelper.onSurfaceChanged(width, height)
     virtualSceneFramebuffer.resize(width, height)
   }
+  //</editor-fold>
 
   override fun onDrawFrame(render: SampleRender) {
     val session = session ?: return
+
+    //<editor-fold desc="ARCore frame boilerplate" defaultstate="collapsed">
     // Texture names should only be set once on a GL thread unless they change. This is done during
     // onDrawFrame rather than onSurfaceCreated since the session is not guaranteed to have been
     // initialized during the execution of onSurfaceCreated.
@@ -177,6 +174,7 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
     camera.getViewMatrix(viewMatrix, 0)
 
     render.clear(virtualSceneFramebuffer, 0f, 0f, 0f, 0f)
+    //</editor-fold>
 
     val earth = session.earth
     if (earth?.trackingState == TrackingState.TRACKING) {
@@ -196,48 +194,53 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
   }
 
   fun onMapClick() {
+    val earth = session?.earth ?: return
+    if (earth.trackingState != TrackingState.TRACKING) {
+      return
+    }
+    anchors.clear()
+
     for (anchor in anchors)
         anchor.detach()
-    anchors.clear()
-    InitAnchorAnchors(anchorsArray)
-  }
 
-  private fun InitAnchorAnchors(data: MutableList<AnchorJsonData>) {
-    val earth = session?.earth ?: return
-    val convertedArray: MutableList<Anchor> = mutableListOf<Anchor>()
+    // Place the earth anchor at the same altitude as that of the camera to make it easier to view.
+// The rotation quaternion of the anchor in the
+// East-Up-South (EUS) coordinate system.
+    val qx = 0f
+    val qy = 0f
+    val qz = 0f
+    val qw = 1f
+    var i = 0
 
-    try {
-        data.forEachIndexed({ index, item ->
-            convertedArray.add(earth.createAnchor(item.lng, item.lat, item.alti, 0f, 0f, 0f, 1f));
-            val marker = activity.view.mapView?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int)
-            activity.view.mapView?.earthMarkers?.add(marker);
-            activity.view.mapView?.earthMarkers?.get(index)?.apply {
-                position = LatLng(item.lat, item.lng)
-                isVisible = true
-            };
-        })
-    } catch (e: Throwable) {
-        Log.e("NTMA", e.toString(), e)
+    for (anchor in anchorsArray) {
+        anchors.add(earth.createAnchor(anchor.lat, anchor.lng, anchor.alti, qx, qy, qz, qw))
+        activity.view.mapView?.earthMarkers?.add(
+            activity.view.mapView?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int)
+        )
+        activity.view.mapView?.earthMarkers?.get(i)?.apply {
+            position = LatLng(anchor.lat, anchor.lng)
+            isVisible = true
+        }
+        i++
     }
-    anchors = convertedArray;
   }
 
   private fun SampleRender.renderCompassAtAnchor() {
     // Get the current pose of the Anchor in world space. The Anchor pose is updated
     // during calls to session.update() as ARCore refines its estimate of the world.
 
-    try {
-        anchors.forEachIndexed { index, anchor ->
-            anchor.pose?.toMatrix(modelMatrix, 0)
-            Matrix.multiplyMM(modelViewMatrix, 0, viewMatrix, 0, modelMatrix, 0)
-            Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelViewMatrix, 0)
-            virtualObjectShaders.get(index).setMat4("u_ModelViewProjection", modelViewProjectionMatrix)
-            draw(virtualObjectMeshs.get(index), virtualObjectShaders.get(index), virtualSceneFramebuffer)
-        }
-    } catch (e: Throwable) {
-        Log.e("NTMA", e.toString(), e)
+    var i = 0
+    while (i < anchors.size) {
+        anchors.get(i).pose.toMatrix(modelMatrix, 0)
+        Matrix.multiplyMM(modelViewMatrix, 0, viewMatrix, 0, modelMatrix, 0)
+        Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelViewMatrix, 0)
+
+        virtualObjectShaders.get(i).setMat4("u_ModelViewProjection", modelViewProjectionMatrix)
+        draw(virtualObjectMeshs.get(i), virtualObjectShaders.get(i), virtualSceneFramebuffer)
+        i++
     }
   }
 
-  private fun showError(errorMessage: String) = activity.view.snackbarHelper.showError(activity, errorMessage)
+  private fun showError(errorMessage: String) =
+    activity.view.snackbarHelper.showError(activity, errorMessage)
 }
