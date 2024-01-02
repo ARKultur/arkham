@@ -74,6 +74,7 @@ public class SampleRender {
   }
 
   /**
+   *
    * Draw a {@link Mesh} with the specified {@link Shader} to the given {@link Framebuffer}.
    *
    * <p>The {@code framebuffer} argument may be null, in which case the default framebuffer is used.
@@ -82,10 +83,6 @@ public class SampleRender {
     useFramebuffer(framebuffer);
     shader.lowLevelUse();
     mesh.lowLevelDraw();
-    int error = GLES30.glGetError();
-    if (error != GLES30.GL_NO_ERROR) {
-        GLError.maybeThrowGLException("error", "opengl error");
-    }
   }
 
   /**

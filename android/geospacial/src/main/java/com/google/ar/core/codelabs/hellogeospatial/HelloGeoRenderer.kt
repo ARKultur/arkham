@@ -39,8 +39,8 @@ import com.google.ar.core.codelabs.hellogeospatial.helpers.MapView
 
 data class AnchorData(
     val anchor: Anchor?,
-    val meshName: String?,
-    val textureName: String?
+    val mesh: Mesh?,
+    val shader: Shader?,
 )
 
 class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: MutableList<AnchorJsonData>) : SampleRender.Renderer, DefaultLifecycleObserver {
@@ -73,7 +73,7 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
 
   val displayRotationHelper = DisplayRotationHelper(activity)
   val trackingStateHelper = TrackingStateHelper(activity)
-  var anchors: MutableList<AnchorData> = mutableListOf<AnchorData>()
+  var anchors: MutableList<Anchor> = mutableListOf<Anchor>()
 
   init {
     onMapClick()
@@ -102,7 +102,11 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
         val texture = Texture.createFromAsset(render, anchor.textureName, Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB)
         virtualObjectMeshs.add(Mesh.createFromAsset(render, anchor.meshName))
         virtualObjectTextures.add(texture)
-        virtualObjectShaders.add(Shader.createFromAssets(render, "shaders/ar_unlit_object.vert", "shaders/ar_unlit_object.frag",/*defines=*/ null).setTexture("u_Texture", texture))
+        virtualObjectShaders.add(Shader.createFromAssets(
+            render,
+            "shaders/ar_unlit_object.vert",
+            "shaders/ar_unlit_object.frag",/*defines=*/ null
+        ).setTexture("u_Texture", virtualObjectTextures.get(virtualObjectTextures.size - 1)))
       }
 
       backgroundRenderer.setUseDepthVisualization(render, false)
@@ -193,29 +197,23 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
 
   fun onMapClick() {
     for (anchor in anchors)
-        anchor.anchor?.detach()
+        anchor.detach()
     anchors.clear()
     InitAnchorAnchors(anchorsArray)
   }
 
   private fun InitAnchorAnchors(data: MutableList<AnchorJsonData>) {
     val earth = session?.earth ?: return
-    val convertedArray: MutableList<AnchorData> = mutableListOf<AnchorData>()
+    val convertedArray: MutableList<Anchor> = mutableListOf<Anchor>()
 
     try {
         data.forEachIndexed({ index, item ->
-            val newAnchor = earth.createAnchor(item.lng, item.lat, item.alti, 0f, 0f, 0f, 1f)
-            Log.i("NTMA", "Anchor created " + newAnchor.toString() + " " + item.toString())
-            convertedArray.add(AnchorData(
-                newAnchor,
-                item.meshName,
-                item.textureName
-            ));
+            convertedArray.add(earth.createAnchor(item.lng, item.lat, item.alti, 0f, 0f, 0f, 1f));
             val marker = activity.view.mapView?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int)
             activity.view.mapView?.earthMarkers?.add(marker);
             activity.view.mapView?.earthMarkers?.get(index)?.apply {
                 position = LatLng(item.lat, item.lng)
-                    isVisible = true
+                isVisible = true
             };
         })
     } catch (e: Throwable) {
@@ -230,13 +228,10 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
 
     try {
         anchors.forEachIndexed { index, anchor ->
-            anchor.anchor?.pose?.toMatrix(modelMatrix, 0)
+            anchor.pose?.toMatrix(modelMatrix, 0)
             Matrix.multiplyMM(modelViewMatrix, 0, viewMatrix, 0, modelMatrix, 0)
             Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelViewMatrix, 0)
             virtualObjectShaders.get(index).setMat4("u_ModelViewProjection", modelViewProjectionMatrix)
-            Log.e("NTMA", "Draw index " + index.toString() + " mesh " + virtualObjectMeshs.get(index).toString() +
-                " shaders " + virtualObjectShaders.get(index).toString() + " " + modelViewMatrix.contentToString())
-
             draw(virtualObjectMeshs.get(index), virtualObjectShaders.get(index), virtualSceneFramebuffer)
         }
     } catch (e: Throwable) {
@@ -244,6 +239,5 @@ class HelloGeoRenderer(val activity: HelloGeoActivity, val anchorsArray: Mutable
     }
   }
 
-  private fun showError(errorMessage: String) =
-    activity.view.snackbarHelper.showError(activity, errorMessage)
+  private fun showError(errorMessage: String) = activity.view.snackbarHelper.showError(activity, errorMessage)
 }
