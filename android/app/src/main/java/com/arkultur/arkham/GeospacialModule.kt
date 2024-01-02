@@ -12,10 +12,11 @@ class GeospacialModule(reactContext: ReactApplicationContext) : ReactContextBase
     override fun getName() = "Geospacial"
 
     @ReactMethod(isBlockingSynchronousMethod = false)
-    fun runPoc() {
+    fun runPoc(data: String) {
         val context: ReactApplicationContext = reactApplicationContext
         val intent = Intent(context, HelloGeoActivity::class.java)
         val flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra("data", data)
 
         if (intent.resolveActivity(context.packageManager) != null) {
             intent.flags = flags
