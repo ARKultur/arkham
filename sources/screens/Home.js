@@ -187,7 +187,7 @@ const Home = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (state.markers.length == 0 && !makersIsSetup) {
+    if (!makersIsSetup) {
       dispatch(get_markers());
       setMarkerIsSetup(true);
     }

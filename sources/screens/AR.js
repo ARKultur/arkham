@@ -30,7 +30,7 @@ const ARScreen = () => {
   const [makersIsSetup, setMarkerIsSetup] = useState(false);
 
   useEffect(() => {
-    if (state.markers.length == 0 && !makersIsSetup) {
+    if (!makersIsSetup) {
       dispatch(get_markers());
       setMarkerIsSetup(true);
     }
@@ -39,7 +39,6 @@ const ARScreen = () => {
 
   const runAr = () => {
     if (makersIsSetup) {
-      console.log(JSON.stringify(state.markers));
       NativeModules.Geospacial.runPoc(JSON.stringify(state.markers));
     }
   };
