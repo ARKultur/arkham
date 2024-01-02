@@ -21,7 +21,6 @@ buildscript {
     }
     dependencies {
         classpath("com.android.tools.build:gradle:7.3.0")
-        classpath "com.google.code.gson:gson:2.8.8"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
         classpath("com.facebook.react:react-native-gradle-plugin")

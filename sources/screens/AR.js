@@ -1,5 +1,5 @@
 import { NativeModules } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import { Animated, View, StyleSheet, Dimensions, ScrollView, Text } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,7 +39,7 @@ const ARScreen = () => {
 
   const runAr = () => {
     if (makersIsSetup)
-      NativeModules.Geospacial.runPoc(JSON.Stringify(state.markers))
+      NativeModules.Geospacial.runPoc(JSON.stringify(state.markers));
   };
   let SLIDES = [];
   let INDICATORS = [];

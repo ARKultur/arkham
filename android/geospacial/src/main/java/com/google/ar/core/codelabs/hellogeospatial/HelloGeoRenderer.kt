@@ -96,8 +96,8 @@ class HelloGeoRenderer(val activity: HelloGeoActivity,
 
       var i = 0
       while (i < anchorsArray.size) {
-          virtualObjectTextures.add(Texture.createFromAsset(render, anchorsArray.get(i).textureName, Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB))
-          virtualObjectMeshs.add(Mesh.createFromAsset(render, anchorsArray.get(i).meshName))
+          virtualObjectTextures.add(Texture.createFromAsset(render, anchorsArray.get(i).texture, Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB))
+          virtualObjectMeshs.add(Mesh.createFromAsset(render, anchorsArray.get(i).model))
           virtualObjectShaders.add(Shader.createFromAssets(render, "shaders/ar_unlit_object.vert", "shaders/ar_unlit_object.frag",/*defines=*/ null).setTexture("u_Texture", virtualObjectTextures.get(i)))
           i++
       }
@@ -213,12 +213,12 @@ class HelloGeoRenderer(val activity: HelloGeoActivity,
     var i = 0
 
     for (anchor in anchorsArray) {
-        anchors.add(earth.createAnchor(anchor.lat, anchor.lng, anchor.alti, qx, qy, qz, qw))
+        anchors.add(earth.createAnchor(anchor.latitude, anchor.longitude, anchor.altitude, qx, qy, qz, qw))
         activity.view.mapView?.earthMarkers?.add(
             activity.view.mapView?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int)
         )
         activity.view.mapView?.earthMarkers?.get(i)?.apply {
-            position = LatLng(anchor.lat, anchor.lng)
+            position = LatLng(anchor.latitude, anchor.longitude)
             isVisible = true
         }
         i++
