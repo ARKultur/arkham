@@ -38,8 +38,10 @@ const ARScreen = () => {
 
 
   const runAr = () => {
-    if (makersIsSetup)
+    if (makersIsSetup) {
+      console.log(JSON.stringify(state.markers));
       NativeModules.Geospacial.runPoc(JSON.stringify(state.markers));
+    }
   };
   let SLIDES = [];
   let INDICATORS = [];
