@@ -2,6 +2,8 @@ import { NativeModules } from 'react-native';
 import React from 'react';
 import { Animated, View, StyleSheet, Dimensions, ScrollView, Text } from 'react-native';
 import { Button } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { get_markers } from '../reducers/Actions/markerAction';
 
 const description = [
   '\n\n                            Voici la page AR.\n\
@@ -16,16 +18,28 @@ const titles = [
   'Ensuite',
   'Tu es prêt à explorer les environs'
 ];
-const {width, height }= Dimensions.get('window');
-const FIXED_BAR_WIDTH = width * (300/320);
-const INDICATOR_PADDING = width * (10/320);
+const { width, height } = Dimensions.get('window');
+const FIXED_BAR_WIDTH = width * (300 / 320);
+const INDICATOR_PADDING = width * (10 / 320);
 
 const ARScreen = () => {
   const itemWidth = FIXED_BAR_WIDTH / ((titles.length - 1) * INDICATOR_PADDING);
   const animateX = new Animated.Value(0);
+  const dispatch = useDispatch();
+  const state = useSelector(state => state.markerReducer);
+  const [makersIsSetup, setMarkerIsSetup] = useState(false);
+
+  useEffect(() => {
+    if (state.markers.length == 0 && !makersIsSetup) {
+      dispatch(get_markers());
+      setMarkerIsSetup(true);
+    }
+  }, [state, makersIsSetup]);
+
 
   const runAr = () => {
-    NativeModules.Geospacial.runPoc();
+    if (makersIsSetup)
+      NativeModules.Geospacial.runPoc(JSON.Stringify(state.markers))
   };
   let SLIDES = [];
   let INDICATORS = [];
@@ -33,10 +47,10 @@ const ARScreen = () => {
 
   titles.forEach((title, i) => {
     const thisPage = (
-      <View key={i} style={{width: width}}>
-        <View style= {styles.padding32}>
-          <View style= {styles.textDataSectionWrapper}>
-            <Text style= {styles.title}>{title}</Text>
+      <View key={i} style={{ width: width }}>
+        <View style={styles.padding32}>
+          <View style={styles.textDataSectionWrapper}>
+            <Text style={styles.title}>{title}</Text>
             <Text style={styles.descriptionText}>{description[i]}</Text>
           </View>
         </View>
@@ -67,12 +81,12 @@ const ARScreen = () => {
 
   return (
     <>
-      <View style= {styles.container}>
+      <View style={styles.container}>
         <ScrollView horizontal
           showsHorizontalScrollIndicator={false}
-          scrollEventThrottle= {10}
-          style= {styles.positionAbsolute}
-          contentContainerStyle= {styles.center}
+          scrollEventThrottle={10}
+          style={styles.positionAbsolute}
+          contentContainerStyle={styles.center}
           pagingEnabled
           onScroll={Animated.event([
             { nativeEvent: { contentOffset: { x: animateX } } }
@@ -82,7 +96,7 @@ const ARScreen = () => {
 
         {/* indicator wrapper */}
         <View style={styles.indicatorOuterWrapper}>
-          <View style= {styles.indicatorInnerWrapper}>
+          <View style={styles.indicatorInnerWrapper}>
             {INDICATORS}
           </View>
         </View>
@@ -127,10 +141,10 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   padding32: {
-    padding : 32
+    padding: 32
   },
   textDataSectionWrapper: {
-    paddingTop: height * (24/360)
+    paddingTop: height * (24 / 360)
   },
   title: {
     fontSize: 24,
@@ -139,7 +153,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontSize: 14,
     color: '#737373',
-    paddingTop: height * (4/360),
+    paddingTop: height * (4 / 360),
     lineHeight: 22
   },
   normalIndicator: {

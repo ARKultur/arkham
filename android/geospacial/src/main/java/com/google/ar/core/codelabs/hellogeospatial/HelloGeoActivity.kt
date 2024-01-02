@@ -31,13 +31,15 @@ import com.google.ar.core.exceptions.UnavailableApkTooOldException
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 data class AnchorJsonData(
-    val lat: Double,
-    val lng: Double,
-    val alti: Double,
-    val meshName: String,
-    val textureName: String
+    val latitude: Double,
+    val longitude: Double,
+    val altitude: Double,
+    val model: String,
+    val texture: String
 )
 
 class HelloGeoActivity : AppCompatActivity() {
@@ -72,20 +74,25 @@ class HelloGeoActivity : AppCompatActivity() {
         view.snackbarHelper.showError(this, message)
       }
 
-    var anchorsArray = mutableListOf(
-        AnchorJsonData(48.797235,
-            2.432045,
-            78.7,
-            "models/cube/cube.obj",
-            "models/cube/uv_texture.png"
-        ),
-        AnchorJsonData(48.797200,
-            2.432045,
-            75.7,
-            "models/triomphe/arc.obj",
-            "models/triomphe/arc.jpg"
-        )
-    )
+    val data = intent.getStringExtra("data")
+
+    val listType = object : TypeToken<List<AnchorJsonData>>() {}.type
+    val archorsArray: List<AnchorJsonData> = Gson().fromJson(data, listType)
+
+    //var anchorsArray = mutableListOf(
+    //    AnchorJsonData(48.797235,
+    //        2.432045,
+    //        78.7,
+    //        "models/cube/cube.obj",
+    //        "models/cube/uv_texture.png"
+    //    ),
+    //    AnchorJsonData(48.797200,
+    //        2.432045,
+    //        75.7,
+    //        "models/triomphe/arc.obj",
+    //        "models/triomphe/arc.jpg"
+    //    )
+    //)
     // Configure session features.
     arCoreSessionHelper.beforeSessionResume = ::configureSession
     lifecycle.addObserver(arCoreSessionHelper)
