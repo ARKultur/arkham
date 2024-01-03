@@ -11,8 +11,6 @@ import {
   View,
 } from 'react-native';
 import {getAllMarkers} from '../API/Markers';
-import {useDispatch, useSelector} from 'react-redux';
-import {setSkipTutoAR} from '../reducers/userReducer';
 
 const {width} = Dimensions.get('window');
 
@@ -116,8 +114,6 @@ const ArScreen = ({navigation}) => {
   const {colors} = useTheme();
   const [markers, setMarkers] = useState([]);
   const scrollViewRef = useRef(null);
-  const {skipTutoAR} = useSelector(state => state.userReducer);
-  const dispatch = useDispatch();
 
   const scrollNext = page => {
     if (scrollViewRef.current) {
@@ -129,7 +125,6 @@ const ArScreen = ({navigation}) => {
     if (markers && markers.length > 0) {
       NativeModules.Geospacial.runPoc(JSON.stringify(markers));
     }
-    dispatch(setSkipTutoAR(true));
   };
 
   const getData = async () => {
@@ -148,35 +143,31 @@ const ArScreen = ({navigation}) => {
 
   return (
     <>
-      {skipTutoAR ? (
-        runAr()
-      ) : (
-        <View style={{flex: 1, backgroundColor: colors.primary}}>
-          <Image
-            source={require('../images/logo.png')}
-            style={{
-              width: 100,
-              height: 100,
-              resizeMode: 'contain',
-              justifyContent: 'center',
-              alignSelf: 'center',
-              marginTop: 20,
-            }}
-          />
-          <ScrollView
-            ref={scrollViewRef}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            scrollEventThrottle={16}
-            snapToAlignment="center"
-            style={{width: '100%'}}>
-            <Step1 scrollNext={scrollNext} />
-            <Step2 scrollNext={scrollNext} />
-            <Step3 runAr={runAr} />
-          </ScrollView>
-        </View>
-      )}
+      <View style={{flex: 1, backgroundColor: colors.primary}}>
+        <Image
+          source={require('../images/logo.png')}
+          style={{
+            width: 100,
+            height: 100,
+            resizeMode: 'contain',
+            justifyContent: 'center',
+            alignSelf: 'center',
+            marginTop: 20,
+          }}
+        />
+        <ScrollView
+          ref={scrollViewRef}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          scrollEventThrottle={16}
+          snapToAlignment="center"
+          style={{width: '100%'}}>
+          <Step1 scrollNext={scrollNext} />
+          <Step2 scrollNext={scrollNext} />
+          <Step3 runAr={runAr} />
+        </ScrollView>
+      </View>
     </>
   );
 };
