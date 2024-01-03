@@ -2,13 +2,14 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import Suggestions from '../screens/Suggestions';
 import Home from '../screens/Home';
-import ARScreen from '../screens/AR';
+
 import Settings from '../screens/Settings';
 import Profile from '../screens/Profile';
 import BottomMenu from '../components/BottomMenu';
 import Appbar from '../components/Appbar';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import ArScreen from '../screens/ArScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -44,7 +45,7 @@ const AppRouter = () => {
             headerShown: false,
           }}>
           <Tab.Screen name="Home" component={Home} />
-          <Tab.Screen name="AR" component={ARScreen} />
+          <Tab.Screen name="AR" component={ArScreen} />
           <Tab.Screen name="Profile" component={ProfileStack} />
         </Tab.Navigator>
       )}
