@@ -96,9 +96,12 @@ class HelloGeoRenderer(val activity: HelloGeoActivity,
 
       var i = 0
       while (i < anchorsArray.size) {
-          virtualObjectTextures.add(Texture.createFromAsset(render, anchorsArray.get(i).texture, Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB))
-          virtualObjectMeshs.add(Mesh.createFromAsset(render, anchorsArray.get(i).model))
-          virtualObjectShaders.add(Shader.createFromAssets(render, "shaders/ar_unlit_object.vert", "shaders/ar_unlit_object.frag",/*defines=*/ null).setTexture("u_Texture", virtualObjectTextures.get(i)))
+          if (anchorsArray.get(i).texture != null && (anchorsArray.get(i).texture as String).length > 0 &&
+            anchorsArray.get(i).model != null && (anchorsArray.get(i).model as String).length > 0) {
+              virtualObjectTextures.add(Texture.createFromAsset(render, anchorsArray.get(i).texture, Texture.WrapMode.CLAMP_TO_EDGE, Texture.ColorFormat.SRGB))
+              virtualObjectMeshs.add(Mesh.createFromAsset(render, anchorsArray.get(i).model))
+              virtualObjectShaders.add(Shader.createFromAssets(render, "shaders/ar_unlit_object.vert", "shaders/ar_unlit_object.frag", null).setTexture("u_Texture", virtualObjectTextures.get(i)))
+          }
           i++
       }
 
@@ -195,9 +198,6 @@ class HelloGeoRenderer(val activity: HelloGeoActivity,
 
   fun onMapClick() {
     val earth = session?.earth ?: return
-    if (earth.trackingState != TrackingState.TRACKING) {
-      return
-    }
     anchors.clear()
 
     for (anchor in anchors)
@@ -230,7 +230,8 @@ class HelloGeoRenderer(val activity: HelloGeoActivity,
     // during calls to session.update() as ARCore refines its estimate of the world.
 
     var i = 0
-    while (i < anchors.size) {
+    if (virtualObjectShaders.size == anchors.size && virtualObjectMeshs.size == anchors.size && virtualObjectTextures.size == anchors.size) {
+      while (i < anchors.size) {
         anchors.get(i).pose.toMatrix(modelMatrix, 0)
         Matrix.multiplyMM(modelViewMatrix, 0, viewMatrix, 0, modelMatrix, 0)
         Matrix.multiplyMM(modelViewProjectionMatrix, 0, projectionMatrix, 0, modelViewMatrix, 0)
@@ -238,6 +239,7 @@ class HelloGeoRenderer(val activity: HelloGeoActivity,
         virtualObjectShaders.get(i).setMat4("u_ModelViewProjection", modelViewProjectionMatrix)
         draw(virtualObjectMeshs.get(i), virtualObjectShaders.get(i), virtualSceneFramebuffer)
         i++
+      }
     }
   }
 
