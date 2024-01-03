@@ -1,21 +1,21 @@
 import axios from 'axios';
-import { API_URL } from '../constants/API';
+import {API_URL} from '../constants/API';
 
-const getMarkers = async (thunkAPI) => {
-    const URL = API_URL + '/api/nodes/all';
-    try {
-        const response = await axios.get(URL)
-        return response.data;
-    } catch(error) {
-        console.log(error.response);
-        thunkAPI.rejectWithValue(error.response.data);
-        throw error.response.data;
-    }
-}
-  //try {
-    //const response = await axios.post(API_URL + '/markers')
-    //return response.data;
-   /* const tmpData = [
+const getMarkers = async thunkAPI => {
+  const URL = API_URL + '/api/nodes/all';
+  try {
+    const response = await axios.get(URL);
+    return response.data;
+  } catch (error) {
+    console.log(error.response);
+    thunkAPI.rejectWithValue(error.response.data);
+    throw error.response.data;
+  }
+};
+//try {
+//const response = await axios.post(API_URL + '/markers')
+//return response.data;
+/* const tmpData = [
         {
             title: 'test 1',
             descriptions: 'description 1',
@@ -40,9 +40,20 @@ const getMarkers = async (thunkAPI) => {
     ];
     return tmpData;*/
 //  } catch (error) {
-    //console.log(error.response.data);
+//console.log(error.response.data);
 //  }
 
+export const getAllMarkers = async () => {
+  const URL = API_URL + '/api/nodes/all';
+  try {
+    const response = await axios.get(URL);
+
+    return response.data;
+  } catch (error) {
+    console.log(error.response);
+    throw error.response.data;
+  }
+};
 
 const MarkerService = {
   getMarkers,

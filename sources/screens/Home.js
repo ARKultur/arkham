@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
 import {getSuggestedPlace} from '../API/Suggestions';
 import {filter_markers, get_markers} from '../reducers/Actions/markerAction';
+import {getAllMarkers} from '../API/Markers';
 
 const FilterItem = ({marker, filters, setFilters}) => {
   const [checked, setChecked] = useState(
@@ -65,6 +66,12 @@ const FilterModal = ({isOpenModal, setIsOpenModal, setMarkers}) => {
   const [filters, setFilters] = useState([...markers] || []);
   const [userInput, setUserInput] = useState('');
 
+  const getData = async () => {
+    const dataMarkers = await getAllMarkers();
+
+    setFilters(dataMarkers);
+  };
+
   useEffect(() => {
     if (userInput.length > 0) {
       const userMarkers = [...markers];
@@ -75,7 +82,7 @@ const FilterModal = ({isOpenModal, setIsOpenModal, setMarkers}) => {
 
       setFilters(newFilters);
     } else {
-      setFilters(markers);
+      getData();
     }
   }, [userInput]);
 
@@ -148,7 +155,7 @@ const FilterModal = ({isOpenModal, setIsOpenModal, setMarkers}) => {
               height: 200,
               marginTop: 20,
             }}
-            data={filters}
+            data={markers}
             renderItem={({item}) => (
               <FilterItem
                 marker={item}
@@ -174,33 +181,27 @@ const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const state = useSelector(state => state.markerReducer);
   const [userInput, setUserInput] = useState('');
-  const [makersIsSetup, setMarkerIsSetup] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [suggestedPlaces, setSuggestedPlaces] = useState([]);
   const [markers, setMarkers] = useState((state && state.markers) || []);
   const {user} = useSelector(state => state.userReducer);
 
   const getData = async () => {
-    const data = await getSuggestedPlace(user.token);
+    const data = await getSuggestedPlace(user.token, user.likedSuggestions, {
+      latitude: 45.74600601196289,
+      longitude: 4.842291831970215,
+    });
+    const dataMarkers = await getAllMarkers();
 
+    setMarkers(dataMarkers);
     setSuggestedPlaces(data);
   };
 
   useEffect(() => {
-    if (!makersIsSetup) {
+    const subscribe = navigation.addListener('focus', () => {
       dispatch(get_markers());
-      setMarkerIsSetup(true);
-    }
-  }, [state, makersIsSetup]);
-
-  useEffect(() => {
-    const subscribe = navigation.addListener(
-      'focus',
-      () => {
-        getData();
-      },
-      [],
-    );
+      getData();
+    });
 
     return subscribe;
   }, []);

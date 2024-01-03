@@ -38,16 +38,23 @@ export const addSuggestionToUser = async body => {
   }
 };
 
-export const getSuggestedPlace = async token => {
+export const getSuggestedPlace = async (token, filters, location) => {
   try {
     const URL = API_URL + '/api/suggestion/map';
-    const params = {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    };
 
-    const response = await axios.get(URL, params);
+    const response = await axios.post(
+      URL,
+      {
+        filters,
+        location,
+      },
+      {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      },
+    );
+
     return response.data && response.data.results;
   } catch (error) {
     console.log(error.response.data);

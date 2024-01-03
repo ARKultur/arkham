@@ -38,6 +38,7 @@ const ProfileStack = () => {
     <Stack.Navigator screenOptions={{header: Appbar, animation: 'none'}}>
       <Stack.Screen name="ProfileScreen" component={Profile} />
       <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="Suggestions" component={Suggestions} />
     </Stack.Navigator>
   );
 };
