@@ -177,7 +177,7 @@ const Suggestions = ({navigation}) => {
         if (suggestions && suggestions.length > 0) {
           setSuggestions(suggestions);
         } else {
-          navigation.navigate('Tab');
+          navigation.navigate('Home');
         }
       } catch (error) {
         console.log(error);
@@ -197,9 +197,9 @@ const Suggestions = ({navigation}) => {
 
   const handleSubmit = async () => {
     if (hasSelectedSuggestions) {
-      navigation.navigate('Tab', {screen: 'Profile'});
+      navigation.navigate('Home', {screen: 'Profile'});
     } else {
-      navigation.navigate('Tab');
+      navigation.navigate('Home');
     }
     await dispatch(editSuggestions(selected));
   };
@@ -207,14 +207,13 @@ const Suggestions = ({navigation}) => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <BottomSheetModalProvider style={{flex: 1}}>
-        <SafeAreaView style={{flex: 1}}>
+        <SafeAreaView style={{flex: 1, marginBottom: 100}}>
           <View
             style={{
               flex: 0.3,
               justifyContent: 'center',
               alignSelf: 'center',
               paddingHorizontal: 50,
-              paddingTop: 50,
             }}>
             <Text variant="headlineSmall" style={{textAlign: 'center'}}>
               Suggestions

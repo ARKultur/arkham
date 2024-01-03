@@ -16,7 +16,7 @@ const getIcon = name => {
   if (name === 'AR') {
     return <Icon name={'dice-d20'} style={{...styles.icons, fontSize: 38}} />;
   } else if (name === 'Profile') {
-    return <Icon name={'user'} style={styles.icons} />;
+    return <Icon name={'user-alt'} style={styles.icons} />;
   } else if (name === 'Home') {
     return <Icon name={'home'} style={styles.icons} />;
   }
@@ -70,7 +70,9 @@ function BottomMenu({navigation}) {
         <ItemAR label={'AR'} onPress={() => navigation.navigate('AR')} />
         <Item
           label={'Profile'}
-          onPress={() => navigation.navigate('Profile')}
+          onPress={() =>
+            navigation.navigate('Profile', {screen: 'ProfileScreen'})
+          }
         />
       </View>
     </View>

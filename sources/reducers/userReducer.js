@@ -11,6 +11,7 @@ const initialState = {
   isLoggedIn: false,
   hasSelectedSuggestions: false,
   skipTutoAR: false,
+  profilePicture: null,
   user: {},
 };
 
@@ -20,6 +21,9 @@ const userSlice = createSlice({
   reducers: {
     setSkipTutoAR: (state, action) => {
       state.skipTutoAR = action.payload;
+    },
+    setProfilePicture: (state, action) => {
+      state.profilePicture = action.payload;
     },
   },
   extraReducers: builder => {
@@ -53,5 +57,5 @@ const userSlice = createSlice({
 });
 
 const {reducer} = userSlice;
-export const {setSkipTutoAR} = userSlice.actions;
+export const {setSkipTutoAR, setProfilePicture} = userSlice.actions;
 export default reducer;
