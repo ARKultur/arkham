@@ -10,13 +10,18 @@ import {
 const initialState = {
   isLoggedIn: false,
   hasSelectedSuggestions: false,
+  skipTutoAR: false,
   user: {},
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setSkipTutoAR: (state, action) => {
+      state.skipTutoAR = action.payload;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(register.fulfilled, state => {
@@ -48,4 +53,5 @@ const userSlice = createSlice({
 });
 
 const {reducer} = userSlice;
+export const {setSkipTutoAR} = userSlice.actions;
 export default reducer;
