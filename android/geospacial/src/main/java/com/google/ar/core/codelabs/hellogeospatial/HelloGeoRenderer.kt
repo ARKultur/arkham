@@ -198,9 +198,6 @@ class HelloGeoRenderer(val activity: HelloGeoActivity,
 
   fun onMapClick() {
     val earth = session?.earth ?: return
-    if (earth.trackingState != TrackingState.TRACKING) {
-      return
-    }
     anchors.clear()
 
     for (anchor in anchors)
