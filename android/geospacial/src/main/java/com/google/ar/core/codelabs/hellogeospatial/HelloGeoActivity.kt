@@ -38,8 +38,8 @@ data class AnchorJsonData(
     val latitude: Double,
     val longitude: Double,
     val altitude: Double,
-    val model: String,
-    val texture: String
+    val model: String?,
+    val texture: String?
 )
 
 class HelloGeoActivity : AppCompatActivity() {
