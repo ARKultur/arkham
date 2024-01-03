@@ -67,10 +67,7 @@ const Profile = ({navigation}) => {
   return (
     <ScrollView contentContainerStyle={{padding: 20}}>
       <View style={styles.container}>
-        <Avatar.Text
-          size={150}
-          label={user && user.username && user.username[0]}
-        />
+        <Avatar.Icon size={150} icon="account" />
         <Text variant="headlineLarge" style={styles.headlines}>
           {user && user.username}
         </Text>

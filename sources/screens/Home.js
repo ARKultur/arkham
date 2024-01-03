@@ -1,6 +1,8 @@
+import {useTheme} from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import {
+  Dimensions,
   FlatList,
   Image,
   StyleSheet,
@@ -9,12 +11,14 @@ import {
   View,
 } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
-import {Button, Checkbox, Modal, Text} from 'react-native-paper';
+import {Checkbox, Modal, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
-import {getSuggestedPlace} from '../API/Suggestions';
-import {filter_markers, get_markers} from '../reducers/Actions/markerAction';
 import {getAllMarkers} from '../API/Markers';
+import {getSuggestedPlace} from '../API/Suggestions';
+import {get_markers} from '../reducers/Actions/markerAction';
+
+const {width} = Dimensions.get('window');
 
 const FilterItem = ({marker, filters, setFilters}) => {
   const [checked, setChecked] = useState(
@@ -180,11 +184,11 @@ FilterModal.propTypes = {
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const state = useSelector(state => state.markerReducer);
-  const [userInput, setUserInput] = useState('');
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [suggestedPlaces, setSuggestedPlaces] = useState([]);
   const [markers, setMarkers] = useState((state && state.markers) || []);
   const {user} = useSelector(state => state.userReducer);
+  const {colors} = useTheme();
 
   const getData = async () => {
     const data = await getSuggestedPlace(user.token, user.likedSuggestions, {
@@ -213,34 +217,30 @@ const Home = ({navigation}) => {
         style={{
           width: 50,
           height: 50,
-          top: 0,
-          left: 0,
           zIndex: 100,
-          margin: 10,
-          alignSelf: 'center',
+          position: 'absolute',
+          left: width / 2 - 25,
+          bottom: 0,
+          top: 10,
         }}
       />
-      <Text style={{alignSelf: 'center', fontSize: 20, fontWeight: 'bold'}}>
-        ARKultur
-      </Text>
-      <View style={styles.FilterPart}>
-        <TextInput
-          placeholder="Search..."
-          style={styles.input}
-          value={userInput}
-          onChangeText={text => setUserInput(text)}
-        />
-        <Button
-          icon="magnify"
-          onPress={() => dispatch(filter_markers({userInput, markers}))}
-          style={styles.searchButton}
-        />
 
-        <Button
-          icon="filter"
-          onPress={() => setIsOpenModal(true)}
-          style={styles.searchButton}
-        />
+      <View
+        style={{
+          backgroundColor: colors.primary,
+          borderRadius: 5,
+          height: 40,
+          width: 40,
+          position: 'absolute',
+          justifyContent: 'center',
+          alignItems: 'center',
+          right: 10,
+          top: 15,
+          zIndex: 100,
+        }}>
+        <TouchableOpacity onPress={() => setIsOpenModal(!isOpenModal)}>
+          <Icon name="filter" size={25} color={'white'} />
+        </TouchableOpacity>
       </View>
 
       <MapView
@@ -302,20 +302,12 @@ Home.propTypes = {
 };
 
 const styles = StyleSheet.create({
-  FilterPart: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-    padding: 10,
-    paddingHorizontal: 25,
-  },
   MapContainer: {
     flex: 1,
   },
   mapStyle: {
     flex: 1,
   },
-
   input: {
     borderRadius: 5,
     height: 40,
@@ -329,6 +321,15 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 400,
     height: 800,
+  },
+  filter: {
+    position: 'absolute',
+    backgroundColor: 'grey',
+    borderRadius: 5,
+    height: 40,
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
