@@ -232,7 +232,9 @@ const Home = ({navigation}) => {
   const state = useSelector(state => state.markerReducer);
   const {likedSuggestions} = useSelector(state => state.userReducer.user);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [isOpenSuggestionModal, setIsOpenSuggestionModal] = useState(true);
+  const [isOpenSuggestionModal, setIsOpenSuggestionModal] = useState(
+    likedSuggestions && likedSuggestions.length > 0 ? true : false,
+  );
   const [suggestedPlaces, setSuggestedPlaces] = useState([]);
   const [markers, setMarkers] = useState((state && state.markers) || []);
   const {user} = useSelector(state => state.userReducer);
@@ -252,7 +254,7 @@ const Home = ({navigation}) => {
   }, []);
 
   const getData = async () => {
-    if (likedSuggestions.length === 0) {
+    if (!likedSuggestions || likedSuggestions.length === 0) {
       return [];
     } else {
       const data = await getSuggestedPlace(user.token, likedSuggestions, {

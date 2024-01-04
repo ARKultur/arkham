@@ -62,7 +62,6 @@ export const editSuggestions = createAsyncThunk(
     try {
       return body;
     } catch (error) {
-      alert('Cannot edit user.');
       console.error(error);
       throw error;
     }
