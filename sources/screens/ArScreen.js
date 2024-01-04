@@ -1,7 +1,9 @@
 import {useTheme} from '@react-navigation/native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Animated,
   Dimensions,
+  Easing,
   Image,
   NativeModules,
   ScrollView,
@@ -11,8 +13,78 @@ import {
   View,
 } from 'react-native';
 import {getAllMarkers} from '../API/Markers';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const {width} = Dimensions.get('window');
+
+const ScalingIcon = () => {
+  const scale = useRef(new Animated.Value(1)).current; // Initial scale value
+  const {colors} = useTheme();
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(scale, {
+          toValue: 1.1,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, [scale]);
+
+  return (
+    <Animated.View
+      style={{
+        transform: [{scale}],
+        alignSelf: 'center',
+      }}>
+      <Icon name="dice-d20" size={100} color={colors.primary} />
+    </Animated.View>
+  );
+};
+
+const ScalingMaterialIcon = () => {
+  const scale = useRef(new Animated.Value(1)).current; // Initial scale value
+  const {colors} = useTheme();
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(scale, {
+          toValue: 1.1,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, [scale]);
+
+  return (
+    <Animated.View
+      style={{
+        transform: [{scale}],
+        alignSelf: 'center',
+      }}>
+      <MaterialIcon name="cube-scan" size={150} color={colors.primary} />
+    </Animated.View>
+  );
+};
 
 const Step1 = ({scrollNext}) => {
   const {colors} = useTheme();
@@ -21,12 +93,14 @@ const Step1 = ({scrollNext}) => {
     <View style={styles.container}>
       <View style={styles.card}>
         <View>
-          <Text style={styles.title}>Voici la page AR</Text>
+          <Text style={styles.title}>This is the AR </Text>
           <Text style={styles.descriptionText}>
-            Grâce à ça, tu vas pouvoir explorer et visualiser les différents
-            objets en réalité augmentées de ta ville !
+            {
+              "Now you can explore and visualize your city's various objects in your city!"
+            }
           </Text>
         </View>
+        <ScalingIcon />
 
         <TouchableOpacity onPress={() => scrollNext(1)}>
           <View
@@ -38,7 +112,7 @@ const Step1 = ({scrollNext}) => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Text style={{color: 'white'}}>Suivant</Text>
+            <Text style={{color: 'white'}}>Next</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -53,12 +127,14 @@ const Step2 = ({scrollNext}) => {
     <View style={styles.container}>
       <View style={styles.card}>
         <View>
-          <Text style={styles.title}>Un petit moment ...</Text>
+          <Text style={styles.title}>Wait a minute !</Text>
           <Text style={styles.descriptionText}>
-            Avant de commencer, scannes les alentours afin de calibrer ta
-            position sur la carte pour minimiser les erreurs possibles
+            Before you start, scan your surroundings to calibrate your position
+            on the map to minimize possible errors
           </Text>
         </View>
+
+        <ScalingMaterialIcon />
 
         <TouchableOpacity onPress={() => scrollNext(2)}>
           <View
@@ -70,7 +146,7 @@ const Step2 = ({scrollNext}) => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Text style={{color: 'white'}}>Suivant</Text>
+            <Text style={{color: 'white'}}>Next</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -85,11 +161,11 @@ const Step3 = ({runAr}) => {
     <View style={styles.container}>
       <View style={styles.card}>
         <View>
-          <Text style={styles.title}>Tu es prêt à explorer les environs.</Text>
+          <Text style={styles.title}>Be ready to explore</Text>
           <Text style={styles.descriptionText}>
-            {
-              "\n\nTu auras sur ton écran 2 parties. Au dessus, tu auras le visuel sur ta caméra arrière de ton téléphone.\n\n En dessous, tu auras une carte google map afin que tu puisses te repérer dans la ville\n\n\nA l'aide de la carte, trouves les marqueurs AR afin de pouvoir les visualiser avec ton téléphone\n\n"
-            }
+            {"You'll have 2 parts on your screen. Above, you'll have the visual on your phone's rear camera.\n\n" +
+              "Below, you'll have a google map so you can find your way around the city" +
+              '\n\nUse the map to find the AR markers so you can visualize them with your phone.\n\n'}
           </Text>
         </View>
         <TouchableOpacity onPress={() => runAr()}>

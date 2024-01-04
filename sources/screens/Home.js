@@ -2,14 +2,19 @@ import {useTheme} from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,
+  Linking,
+  PermissionsAndroid,
+  Pressable,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker} from 'react-native-maps';
 import {Checkbox, Modal, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -39,7 +44,7 @@ const FilterItem = ({marker, filters, setFilters}) => {
         borderBottomEndRadius: 0,
         borderBottomStartRadius: 0,
       }}>
-      <Icon name="map-marker" size={20} />
+      <Icon name="map-marker" size={20} color={'black'} />
       <Text>{marker.name}</Text>
       <Checkbox
         onPress={() => {
@@ -118,7 +123,7 @@ const FilterModal = ({isOpenModal, setIsOpenModal, setMarkers}) => {
             onPress={() => {
               setIsOpenModal(!isOpenModal);
             }}>
-            <Icon name="close" size={25} />
+            <Icon name="close" size={25} color={'black'} />
           </TouchableOpacity>
 
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
@@ -181,34 +186,102 @@ FilterModal.propTypes = {
   setMarkers: PropTypes.func.isRequired,
 };
 
+const requestLocationPermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (granted === 'granted') {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    return false;
+  }
+};
+
+const getLocation = setLocation => {
+  const result = requestLocationPermission();
+
+  result.then(res => {
+    if (res) {
+      Geolocation.getCurrentPosition(
+        position => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        error => {
+          console.log(error.code, error.message);
+          setLocation({
+            latitude: null,
+            longitude: null,
+          });
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      );
+    }
+  });
+};
+
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const state = useSelector(state => state.markerReducer);
+  const {likedSuggestions} = useSelector(state => state.userReducer.user);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenSuggestionModal, setIsOpenSuggestionModal] = useState(true);
   const [suggestedPlaces, setSuggestedPlaces] = useState([]);
   const [markers, setMarkers] = useState((state && state.markers) || []);
   const {user} = useSelector(state => state.userReducer);
   const {colors} = useTheme();
+  const [location, setLocation] = useState({
+    latitude: null,
+    longitude: null,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const getData = async () => {
-    const data = await getSuggestedPlace(user.token, user.likedSuggestions, {
-      latitude: 45.74600601196289,
-      longitude: 4.842291831970215,
-    });
-    const dataMarkers = await getAllMarkers();
+    if (likedSuggestions.length === 0) {
+      return [];
+    } else {
+      const data = await getSuggestedPlace(user.token, likedSuggestions, {
+        latitude: location.latitude,
+        longitude: location.longitude,
+      });
+      const dataMarkers = await getAllMarkers();
 
-    setMarkers(dataMarkers);
-    setSuggestedPlaces(data);
+      setMarkers(dataMarkers);
+      setSuggestedPlaces(data);
+    }
   };
 
   useEffect(() => {
     const subscribe = navigation.addListener('focus', () => {
+      getLocation(setLocation);
       dispatch(get_markers());
-      getData();
     });
 
     return subscribe;
   }, []);
+
+  useEffect(() => {
+    if (location.latitude && location.longitude && isOpenSuggestionModal) {
+      getData();
+    } else {
+      setSuggestedPlaces([]);
+    }
+  }, [location, isOpenSuggestionModal]);
 
   return (
     <View style={styles.MapContainer}>
@@ -224,8 +297,8 @@ const Home = ({navigation}) => {
           top: 10,
         }}
       />
-
-      <View
+      <Pressable
+        onPress={() => setIsOpenModal(true)}
         style={{
           backgroundColor: colors.primary,
           borderRadius: 5,
@@ -235,58 +308,112 @@ const Home = ({navigation}) => {
           justifyContent: 'center',
           alignItems: 'center',
           right: 10,
-          top: 15,
+          top: 10,
           zIndex: 100,
         }}>
-        <TouchableOpacity onPress={() => setIsOpenModal(!isOpenModal)}>
-          <Icon name="filter" size={25} color={'white'} />
-        </TouchableOpacity>
-      </View>
+        <Icon name="filter" size={25} color={'white'} />
+      </Pressable>
 
-      <MapView
-        provider="google"
-        style={styles.mapStyle}
-        customMapStyle={config}
-        showsUserLocation={true}
-        zoomEnabled={true}
-        zoomControlEnabled={true}
-        initialRegion={{
-          latitude: 45.74600601196289,
-          longitude: 4.842291831970215,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+      <Pressable
+        onPress={() => setIsOpenSuggestionModal(!isOpenSuggestionModal)}
+        style={{
+          backgroundColor: isOpenSuggestionModal ? 'red' : colors.primary,
+          borderRadius: 5,
+          height: 40,
+          width: 40,
+          position: 'absolute',
+          justifyContent: 'center',
+          alignItems: 'center',
+          right: 10,
+          top: 60,
+          zIndex: 100,
         }}>
-        {markers.length !== 0 &&
-          markers.map((marker, index) => {
-            return (
-              <Marker
-                key={index}
-                coordinate={{
-                  latitude: marker.latitude,
-                  longitude: marker.longitude,
-                }}
-                title={marker.title}
-                description={marker.description}
-              />
-            );
-          })}
-        {suggestedPlaces &&
-          suggestedPlaces[0] &&
-          suggestedPlaces.map((place, index) => {
-            return (
-              <Marker
-                key={index}
-                coordinate={{
-                  latitude: place.geometry.location.lat,
-                  longitude: place.geometry.location.lng,
-                }}
-                title={place.name}
-                description={place.vicinity}
-                image={place.icon}
-              />
-            );
-          })}
-      </MapView>
+        <Icon name="heart" size={25} color={'white'} />
+      </Pressable>
+
+      {location.latitude && location.longitude ? (
+        <MapView
+          provider="google"
+          style={styles.mapStyle}
+          customMapStyle={config}
+          showsUserLocation={true}
+          zoomEnabled={true}
+          zoomControlEnabled={true}
+          initialRegion={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}>
+          {markers.length !== 0 &&
+            markers.map((marker, index) => {
+              return (
+                <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: marker.latitude,
+                    longitude: marker.longitude,
+                  }}
+                  title={marker.title}
+                  description={marker.description}
+                />
+              );
+            })}
+          {suggestedPlaces &&
+            suggestedPlaces[0] &&
+            suggestedPlaces.map((place, index) => {
+              return (
+                <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: place.geometry.location.lat,
+                    longitude: place.geometry.location.lng,
+                  }}
+                  title={place.name}
+                  description={place.vicinity}
+                  image={
+                    'https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png'
+                  }
+                />
+              );
+            })}
+        </MapView>
+      ) : loading ? (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>Getting your location...</Text>
+        </View>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text>Please enable location services to use this feature.</Text>
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openSettings();
+            }}>
+            <View
+              style={{
+                backgroundColor: colors.primary,
+                padding: 10,
+                borderRadius: 5,
+                margin: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={{color: 'white'}}>Open settings</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <FilterModal
         isOpenModal={isOpenModal}
