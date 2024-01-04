@@ -36,6 +36,7 @@ const Settings = ({navigation}) => {
     );
     navigation.navigate('ProfileScreen');
   };
+
   return (
     <ScrollView>
       <View style={styles.container}>

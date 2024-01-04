@@ -11,6 +11,8 @@ import {getSuggestions} from '../API/Suggestions';
 import {logout} from '../reducers/Actions/userActions';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {setProfilePicture} from '../reducers/userReducer';
+import {API_URL} from '../constants/API';
+import axios from 'axios';
 
 const ProfilePicture = () => {
   const {profilePicture} = useSelector(state => state.userReducer);
@@ -107,6 +109,7 @@ const SuggestionsInfo = () => {
   const [suggestions, setSuggestions] = React.useState([]);
   const {colors} = useTheme();
 
+
   const getData = async () => {
     try {
       const data = await getSuggestions(user.token);
@@ -167,6 +170,20 @@ const Profile = ({navigation}) => {
   const {user} = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
   const {colors} = useTheme();
+  const handleDeleteUser = () => {
+    axios.delete(API_URL + '/api/customers', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + user.accessToken,
+      }
+    }).then(async(res) => {
+      console.log(res);
+      await dispatch(logout());
+    }).catch((e) => {
+      console.log(e);
+    });
+  };
+
 
   return (
     <ScrollView>
@@ -207,6 +224,12 @@ const Profile = ({navigation}) => {
               style={{marginTop: 10}}
               onPress={() => dispatch(logout())}>
               Logout
+            </Button>
+            <Button
+              mode="outlined"
+              style={{marginTop: 10}}
+              onPress={() => handleDeleteUser()}>
+              Delete User
             </Button>
           </View>
         </View>
