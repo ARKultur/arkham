@@ -166,7 +166,9 @@ const Suggestions = ({navigation}) => {
   const {user, hasSelectedSuggestions} = useSelector(
     state => state.userReducer,
   );
-  const [selected, setSelected] = React.useState([]);
+  const [selected, setSelected] = React.useState(
+    (user && user.likedSuggestions) || [],
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -196,7 +198,9 @@ const Suggestions = ({navigation}) => {
   };
 
   const handleSubmit = async () => {
-    if (hasSelectedSuggestions) {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else if (hasSelectedSuggestions) {
       navigation.navigate('Home', {screen: 'Profile'});
     } else {
       navigation.navigate('Home');

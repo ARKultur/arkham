@@ -128,7 +128,7 @@ const SuggestionsInfo = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [user.likedSuggestions]);
 
   return (
     <View

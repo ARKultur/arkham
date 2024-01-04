@@ -41,7 +41,6 @@ export const addSuggestionToUser = async body => {
 export const getSuggestedPlace = async (token, filters, location) => {
   try {
     const URL = API_URL + '/api/suggestion/map';
-    console.log(filters);
 
     const response = await axios.post(
       URL,
@@ -56,9 +55,8 @@ export const getSuggestedPlace = async (token, filters, location) => {
       },
     );
 
-    console.log('--->', response.data);
     return response.data;
   } catch (error) {
-    console.log('--->', error.response.data);
+    console.log(error.response.data);
   }
 };
