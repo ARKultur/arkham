@@ -108,7 +108,7 @@ class HelloGeoRenderer(val activity: HelloGeoActivity,
       backgroundRenderer.setUseDepthVisualization(render, false)
       backgroundRenderer.setUseOcclusion(render, false)
     } catch (e: IOException) {
-      Log.e(TAG, "Failed to read a required asset file", e)
+      Log.e("NTMA", "Failed to read a required asset file", e)
       showError("Failed to read a required asset file: $e")
     }
   }
@@ -214,14 +214,16 @@ class HelloGeoRenderer(val activity: HelloGeoActivity,
 
     for (anchor in anchorsArray) {
         anchors.add(earth.createAnchor(anchor.latitude, anchor.longitude, anchor.altitude, qx, qy, qz, qw))
-        activity.view.mapView?.earthMarkers?.add(
-            activity.view.mapView?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int)
-        )
-        activity.view.mapView?.earthMarkers?.get(i)?.apply {
-            position = LatLng(anchor.latitude, anchor.longitude)
-            isVisible = true
+        val words = (anchor.model as String).split("/");
+        val containsFleche = "fleche" in words
+        if (containsFleche) {
+            activity.view.mapView?.earthMarkers?.add(activity.view.mapView?.createMarker(activity.view.mapView?.EARTH_MARKER_COLOR as Int))
+            activity.view.mapView?.earthMarkers?.get(i)?.apply {
+                position = LatLng(anchor.latitude, anchor.longitude)
+                isVisible = true
+            }
+            i++
         }
-        i++
     }
   }
 
