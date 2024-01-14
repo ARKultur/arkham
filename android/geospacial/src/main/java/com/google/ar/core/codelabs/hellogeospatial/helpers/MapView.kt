@@ -85,17 +85,43 @@ class MapView(val activity: HelloGeoActivity, val googleMap: GoogleMap) {
     }
   }
 
+  private fun createColoredDotBitmap(@ColorInt color: Int): Bitmap {
+      // Create a bitmap with a transparent background
+      val dotBitmap = Bitmap.createBitmap(48, 48, Bitmap.Config.ARGB_8888)
+      val canvas = Canvas(dotBitmap)
+
+      // Draw a circle on the bitmap
+      val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+      paint.color = color
+      canvas.drawCircle(24f, 24f, 24f, paint)
+
+      return dotBitmap
+  }
+
   /** Creates and adds a 2D anchor marker on the 2D map view.  */
   public fun createMarker(
     color: Int
   ): Marker {
-    val markersOptions = MarkerOptions()
-      .position(LatLng(0.0, 0.0))
-      .draggable(false)
-      .anchor(0.5f, 0.5f)
-      .flat(true)
-      .visible(false)
-      .icon(BitmapDescriptorFactory.fromBitmap(createColoredMarkerBitmap(color)))
+    var markersOptions: MarkerOptions? = null
+
+    if (color == CAMERA_MARKER_COLOR) {
+        markersOptions = MarkerOptions()
+            .position(LatLng(0.0, 0.0))
+            .draggable(false)
+            .anchor(0.5f, 0.5f)
+            .flat(true)
+            .visible(false)
+            .icon(BitmapDescriptorFactory.fromBitmap(createColoredMarkerBitmap(color)))
+    } else {
+        markersOptions = MarkerOptions()
+            .position(LatLng(0.0, 0.0))
+            .draggable(false)
+            .anchor(0.5f, 0.5f)
+            .flat(true)
+            .visible(false)
+            .icon(BitmapDescriptorFactory.fromBitmap(createColoredDotBitmap(color)))
+    }
+
     return googleMap.addMarker(markersOptions)!!
   }
 
