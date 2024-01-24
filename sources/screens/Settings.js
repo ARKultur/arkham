@@ -38,7 +38,11 @@ const Settings = ({navigation}) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingBottom: 150,
+      }}>
       <View style={styles.container}>
         <Text variant="headlineLarge" style={styles.headlines}>
           Settings

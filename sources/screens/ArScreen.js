@@ -178,7 +178,7 @@ const Step3 = ({runAr}) => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Text style={{color: 'white'}}>Démarrer</Text>
+            <Text style={{color: 'white'}}>Start</Text>
           </View>
         </TouchableOpacity>
       </View>

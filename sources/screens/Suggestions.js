@@ -3,7 +3,9 @@ import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import React, {useEffect, useRef} from 'react';
 import {
   Animated,
+  Dimensions,
   Image,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -15,6 +17,8 @@ import Swiper from 'react-native-swiper';
 import {useDispatch, useSelector} from 'react-redux';
 import {getSuggestions} from '../API/Suggestions';
 import {editSuggestions} from '../reducers/Actions/userActions';
+
+const {height} = Dimensions.get('window');
 
 const ItemImage = ({suggestion, selected}) => {
   const borderAnimation = useRef(new Animated.Value(0)).current;
@@ -147,7 +151,7 @@ const Item = ({suggestion, selected, handleSelected}) => {
   }, []);
 
   return (
-    <View style={{flex: 1, justifyContent: 'center'}}>
+    <View style={{justifyContent: 'center', paddingVertical: 100}}>
       <SuggestionModal
         bottomSheetModalRef={bottomSheetModalRef}
         suggestion={suggestion}
@@ -211,46 +215,46 @@ const Suggestions = ({navigation}) => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <BottomSheetModalProvider style={{flex: 1}}>
-        <SafeAreaView style={{flex: 1, marginBottom: 100}}>
-          <View
-            style={{
-              flex: 0.3,
-              justifyContent: 'center',
-              alignSelf: 'center',
-              paddingHorizontal: 50,
+        <SafeAreaView style={{flex: 1}}>
+          <ScrollView
+            contentContainerStyle={{
+              paddingBottom: 150,
             }}>
             <Text variant="headlineSmall" style={{textAlign: 'center'}}>
               Suggestions
             </Text>
 
             <Text variant="bodyLarge" style={{textAlign: 'center'}}>
-              Choissiez des suggestions afin de nous aider à vous proposer des
-              lieux qui vous correspondent !
+              Select the suggestions you like the most to help us find the best
             </Text>
-          </View>
 
-          <Swiper showsButtons={false} showsPagination={true} loop={false}>
-            {suggestions &&
-              suggestions.map((suggestion, index) => (
-                <Item
-                  key={index}
-                  suggestion={suggestion}
-                  selected={selected}
-                  handleSelected={handleSelected}
-                />
-              ))}
-          </Swiper>
+            <Swiper
+              showsButtons={false}
+              showsPagination={true}
+              loop={false}
+              style={{height: height / 1.8}}>
+              {suggestions &&
+                suggestions.map((suggestion, index) => (
+                  <Item
+                    key={index}
+                    suggestion={suggestion}
+                    selected={selected}
+                    handleSelected={handleSelected}
+                  />
+                ))}
+            </Swiper>
 
-          <View style={{paddingHorizontal: 20, flex: 0.2}}>
-            <View style={styles.containerButton}>
-              <Button
-                mode="contained"
-                onPress={handleSubmit}
-                contentStyle={styles.button}>
-                <Text style={styles.buttonFont}>Next</Text>
-              </Button>
+            <View style={{paddingHorizontal: 20}}>
+              <View style={styles.containerButton}>
+                <Button
+                  mode="contained"
+                  onPress={handleSubmit}
+                  contentStyle={styles.button}>
+                  <Text style={styles.buttonFont}>Next</Text>
+                </Button>
+              </View>
             </View>
-          </View>
+          </ScrollView>
         </SafeAreaView>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
